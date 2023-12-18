@@ -13,7 +13,8 @@ private:
     QString description;
     QString creator;
     QString downloadlink;
-    std::vector<QImage> images;
+    std::vector<QString> images;
+    int imageNumber;
 
 public:
     //Constructor
@@ -25,7 +26,8 @@ public:
     void setDescription(const QString &description);
     void setCreator(const QString &creator);
     void setDownloadLink(const QString &downloadlink);
-    void setImages(const std::vector<QImage> &imagesVector);
+    void setImages(const std::vector<QString> &imagesVector);
+    void setImageNumber(int index);
 
     //Getter functions.
 
@@ -33,7 +35,8 @@ public:
     QString getDescription() const;
     QString getCreator() const;
     QString getDownloadLink() const;
-    std::vector<QImage> getImages() const;
+    std::vector<QString> getImages() const;
+    int getImageNumber();
 
 };
 

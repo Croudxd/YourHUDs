@@ -1,0 +1,9 @@
+<RCC>
+    <qresource prefix="/imgs"/>
+    <qresource prefix="/imgs/FlawHUD">
+        <file>image1.jpg</file>
+        <file>image2.jpg</file>
+        <file>image3.jpg</file>
+        <file>image4.jpg</file>
+    </qresource>
+</RCC>

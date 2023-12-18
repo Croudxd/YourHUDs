@@ -26,8 +26,12 @@ void hud::setDownloadLink(const QString &downloadlink)
 {
     this->downloadlink = downloadlink;
 }
-void hud::setImages(const std::vector<QImage> &imagesVector){
+void hud::setImages(const std::vector<QString> &imagesVector){
     this->images = imagesVector;
+}
+void hud::setImageNumber(int index)
+{
+    this->imageNumber = index;
 }
 
 //Getters
@@ -47,7 +51,11 @@ QString hud::getDownloadLink() const
 {
     return downloadlink;
 }
-std::vector<QImage> hud::getImages() const
+std::vector<QString> hud::getImages() const
 {
     return images;
+}
+int hud::getImageNumber()
+{
+    return imageNumber;
 }
