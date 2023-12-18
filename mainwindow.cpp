@@ -7,6 +7,7 @@
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
 #include <QUrl>
+#include <QMessageBox>
 
 
 
@@ -14,10 +15,10 @@
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
+    , currentHud(nullptr)
 {
     ui->setupUi(this);
 
-    connect(ui->button7Hud, &QPushButton::clicked, this, &MainWindow::on_button7Hud_clicked);
 
 }
 MainWindow::~MainWindow()
@@ -29,30 +30,34 @@ MainWindow::~MainWindow()
 void MainWindow::on_installbutton_clicked()
 {
     QString link = currentHud->getDownloadLink();
-
     QNetworkAccessManager* manager = new QNetworkAccessManager(this);
-    QNetworkRequest request(QUrl(link));
+    QNetworkRequest request;
+    request.setUrl(QUrl(link));
 
     QNetworkReply* reply = manager->get(request);
 
     connect(reply, &QNetworkReply::finished, [=]() {
         if (reply->error() == QNetworkReply::NoError) {
+            // Save the downloaded file
             QByteArray data = reply->readAll();
-
-            // Save the downloaded data to a file
-            QString fileName = "downloaded_file.zip";  // Set your desired file name
-            QFile file(fileName);
+            QFile file("downloaded_file.zip");  // Change the filename as needed
             if (file.open(QIODevice::WriteOnly)) {
-                file.write(data);
+                qint64 bytesWritten = file.write(data);
                 file.close();
-                qDebug() << "File downloaded successfully: " << fileName;
+
+                if (bytesWritten == data.size()) {
+                    QMessageBox::information(this, "Download Successful", "File downloaded successfully.");
+                } else {
+                    QMessageBox::critical(this, "Error", "Error writing to file.");
+                }
             } else {
-                qDebug() << "Failed to save file.";
+                QMessageBox::critical(this, "Error", "Could not save downloaded file.");
             }
         } else {
-            qDebug() << "Download failed: " << reply->errorString();
+            QMessageBox::critical(this, "Error", "Download failed: " + reply->errorString());
         }
 
+        // Clean up resources
         reply->deleteLater();
         manager->deleteLater();
     });
@@ -77,7 +82,10 @@ std::vector<QString> MainWindow::createImagesVector(QString fileName)
 
 
 void MainWindow::setHud(QString name, QString description, QString creator, QString downloadlink){
-
+    if (currentHud) {
+        delete currentHud;
+        currentHud = nullptr;
+    }
     currentHud = new hud();
     currentHud->setName(name);
     currentHud->setDescription(description);
@@ -96,6 +104,8 @@ void MainWindow::setImages(QLabel *label, const QString imgPath)
     }
     label->setPixmap(pixmap);
     label->setScaledContents(true);
+    qDebug() << "Image Path:" << imgPath;
+
 }
 
 
@@ -103,14 +113,16 @@ void MainWindow::setImages(QLabel *label, const QString imgPath)
 void MainWindow::on_button7Hud_clicked()
 {
     std::cout << "Hello" << std::endl;
-    setHud("FlawHUD", "FlawHUD Custom hud", "CriticalFlaw", "https://github.com/CriticalFlaw/flawhud");
+    setHud("FlawHUD", "FlawHUD Custom hud", "CriticalFlaw", "https://github.com/CriticalFlaw/flawhud/releases/download/2023.1013/flawhud.zip");
     std::vector<QString> imgPaths = createImagesVector("FlawHUD");
     setImages(ui->label_2, imgPaths[0]);
     currentHud->setImages(imgPaths);
 }
 void MainWindow::on_buttonBudHUD_clicked()
 {
-    setHud("BudHUD", "BudHUD Custom HUD", "rbJaxter", "https://github.com/rbjaxter/budhud");
+    std::cout << "world" << std::endl;
+
+    setHud("BudHUD", "BudHUD Custom HUD", "rbJaxter", "https://github.com/rbjaxter/budhud/releases/download/2312_01/budhud-master.zip");
     std::vector<QString> imgPaths = createImagesVector("BudHUD");
     setImages(ui->label_2, imgPaths[0]);
     currentHud->setImages(imgPaths);
@@ -124,6 +136,7 @@ void MainWindow::on_leftImageButton_clicked()
 {
     std::vector<QString> paths = currentHud->getImages();
     int index = currentHud->getImageNumber();
+    qDebug() << "Left Image Button Clicked!";
 
     if (index > 0 && index < paths.size())
     {
@@ -136,6 +149,7 @@ void MainWindow::on_rightImageButton_clicked()
 {
     std::vector<QString> paths = currentHud->getImages();
     int index = currentHud->getImageNumber();
+    qDebug() << "Right Image Button Clicked!";
 
     if (index >= 0 && index < paths.size() - 1)
     {
