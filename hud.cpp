@@ -1,4 +1,5 @@
 #include "hud.h"
+#include <QImage>
 
 hud::hud(QObject *parent, QString name, QString description, QString creator, QString downloadlink) : QObject(parent), name(name), description(description), creator(creator), downloadlink(downloadlink) {
     // Constructor implementation here
@@ -25,8 +26,8 @@ void hud::setDownloadLink(const QString &downloadlink)
 {
     this->downloadlink = downloadlink;
 }
-void hud::setImages(const std::vector<QImage> &images){
-    this->images = images;
+void hud::setImages(const std::vector<QImage> &imagesVector){
+    this->images = imagesVector;
 }
 
 //Getters

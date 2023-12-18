@@ -25,7 +25,7 @@ public:
     void setDescription(const QString &description);
     void setCreator(const QString &creator);
     void setDownloadLink(const QString &downloadlink);
-    void setImages(const std::vector<QImage> &images);
+    void setImages(const std::vector<QImage> &imagesVector);
 
     //Getter functions.
 
