@@ -1,7 +1,7 @@
 #include "mainwindow.h"
 #include "./ui_mainwindow.h"
 #include "hud.h"
-
+#include <iostream>
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -30,7 +30,7 @@ std::vector<QString> MainWindow::createImagesVector(QString fileName)
     QString path = ":/imgs/";
     path += fileName + "/";
 
-    for (int i = 1; i < 5; i++)
+    for (int i = 1; i < 5 ; i++)
     {
         QString imgPath = path + "image" + QString::number(i) + ".jpg";
         imagePaths.push_back(imgPath);
@@ -44,26 +44,17 @@ std::vector<QString> MainWindow::createImagesVector(QString fileName)
 
 
 void MainWindow::setHud(QString name, QString description, QString creator, QString downloadlink){
-    std::vector<QImage> images;
     currentHud = new hud();
     currentHud->setName(name);
     currentHud->setDescription(description);
     currentHud->setCreator(creator);
     currentHud->setDownloadLink(downloadlink);
-    std::vector<QString> imgPaths = createImagesVector("FlawHUD");
-    setImages(ui->label_2, imgPaths[0]);
-    currentHud->setImages(imgPaths);
     ui->textBrowser->setText("Name: " + currentHud->getName() + "\nDescription: " + currentHud->getDescription() + "\nCreator: " + currentHud->getCreator());
 }
 void MainWindow::setImages(QLabel *label, const QString imgPath)
 {
-    // Load the image from file
     QPixmap pixmap(imgPath);
-
-    // Set the pixmap to the label
     label->setPixmap(pixmap);
-
-    // Optionally, scale the image to fit the label
     label->setScaledContents(true);
 }
 
@@ -71,9 +62,15 @@ void MainWindow::setImages(QLabel *label, const QString imgPath)
 
 void MainWindow::on_button7Hud_clicked()
 {
+
     setHud("FlawHUD", "FlawHUD Custom hud", "CriticalFlaw", "https://github.com/CriticalFlaw/flawhud");
+    std::cout << "Calling createImagesVector" << std::endl;
     std::vector<QString> imgPaths = createImagesVector("FlawHUD");
     setImages(ui->label_2, imgPaths[0]);
+    currentHud->setImages(imgPaths);
+    for(const QString &img : imgPaths){
+        qDebug() << img;
+    }
 
 
 }
@@ -90,30 +87,24 @@ void MainWindow::on_leftImageButton_clicked()
 {
     std::vector<QString> paths = currentHud->getImages();
     int index = currentHud->getImageNumber();
-    if (index == 0)
+
+    if (index > 0 && index < paths.size())
     {
-        return;
-    } else{
-        index --;
+        index--;
         currentHud->setImageNumber(index);
-        setImages(ui->label_2, paths[0]);
-        currentHud->setImages(paths);
+        setImages(ui->label_2, paths[index]);
     }
 }
-
-
 void MainWindow::on_rightImageButton_clicked()
 {
     std::vector<QString> paths = currentHud->getImages();
     int index = currentHud->getImageNumber();
-    if (index == 4)
+
+    if (index >= 0 && index < paths.size() - 1)
     {
-        return;
-    } else{
-        index ++;
+        index++;
         currentHud->setImageNumber(index);
-        setImages(ui->label_2, paths[0]);
-        currentHud->setImages(paths);
+        setImages(ui->label_2, paths[index]);
     }
 }
 
