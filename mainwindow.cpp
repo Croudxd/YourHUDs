@@ -137,13 +137,21 @@ void MainWindow::on_leftImageButton_clicked()
     std::vector<QString> paths = currentHud->getImages();
     int index = currentHud->getImageNumber();
     qDebug() << "Left Image Button Clicked!";
-
-    if (index > 0 && index < paths.size())
-    {
+    if (index > 0) {
         index--;
-        currentHud->setImageNumber(index);
-        setImages(ui->label_2, paths[index]);
+    } else {
+        index = paths.size() - 1;  // Set index to the last element
     }
+
+    currentHud->setImageNumber(index);
+
+    if (index >= 0 && index < paths.size()) {
+        setImages(ui->label_2, paths[index]);
+    } else {
+        qDebug() << "Left Image Button Clicked! Error: Index out of bounds.";
+    }
+    currentHud->setImageNumber(index);
+    setImages(ui->label_2, paths[index]);
 }
 void MainWindow::on_rightImageButton_clicked()
 {
@@ -151,11 +159,22 @@ void MainWindow::on_rightImageButton_clicked()
     int index = currentHud->getImageNumber();
     qDebug() << "Right Image Button Clicked!";
 
-    if (index >= 0 && index < paths.size() - 1)
-    {
+    // Loop around if index is at the end
+    if (index < paths.size() - 1) {
         index++;
-        currentHud->setImageNumber(index);
-        setImages(ui->label_2, paths[index]);
+    } else {
+        index = 0;  // Set index to the first element
     }
+
+    currentHud->setImageNumber(index);
+
+    if (index >= 0 && index < paths.size()) {
+        setImages(ui->label_2, paths[index]);
+    } else {
+        qDebug() << "Right Image Button Clicked! Error: Index out of bounds.";
+    }
+
+    currentHud->setImageNumber(index);
+    setImages(ui->label_2, paths[index]);
 }
 
