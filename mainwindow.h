@@ -21,6 +21,7 @@ public:
     void setHud(QString name, QString description, QString creator, QString downloadlink);
     std::vector<QString> createImagesVector(QString fileName);
     void setImages(QLabel *label, const QString imgPath);
+    void readHudTxt();
 private slots:
 
     void on_button7Hud_clicked();
@@ -33,8 +34,11 @@ private slots:
 
     void on_rightImageButton_clicked();
 
+    void on_actionOptions_triggered();
+
 private:
     Ui::MainWindow *ui;
     hud *currentHud;
+    QString currentPath;
 };
 #endif // MAINWINDOW_H

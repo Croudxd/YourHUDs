@@ -8,6 +8,7 @@
 #include <QNetworkReply>
 #include <QUrl>
 #include <QMessageBox>
+#include <QInputDialog>
 
 
 
@@ -35,39 +36,51 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_installbutton_clicked()
 {
-    QString link = currentHud->getDownloadLink();
-    QNetworkAccessManager* manager = new QNetworkAccessManager(this);
-    QNetworkRequest request;
-    request.setUrl(QUrl(link));
+    if(currentPath == nullptr){
+        QMessageBox::warning(this, "No TF2 path set", "Set a TF2 path in options to install hud");
+    } else
+    {
+        QString link = currentHud->getDownloadLink();
+        QNetworkAccessManager* manager = new QNetworkAccessManager(this);
+        QNetworkRequest request;
+        request.setUrl(QUrl(link));
 
-    QNetworkReply* reply = manager->get(request);
+        QNetworkReply* reply = manager->get(request);
 
-    connect(reply, &QNetworkReply::finished, [=]() {
-        if (reply->error() == QNetworkReply::NoError) {
-            // Save the downloaded file
-            QByteArray data = reply->readAll();
-            QFile file("downloaded_file.zip");  // Change the filename as needed
-            if (file.open(QIODevice::WriteOnly)) {
-                qint64 bytesWritten = file.write(data);
-                file.close();
+        connect(reply, &QNetworkReply::finished, [=]() {
+            if (reply->error() == QNetworkReply::NoError) {
+                // Save the downloaded file
+                QByteArray data = reply->readAll();
+                QFile file("downloaded_file.zip");  // Change the filename as needed
+                if (file.open(QIODevice::WriteOnly)) {
+                    qint64 bytesWritten = file.write(data);
+                    file.close();
 
-                if (bytesWritten == data.size()) {
-                    QMessageBox::information(this, "Download Successful", "File downloaded successfully.");
+                    if (bytesWritten == data.size()) {
+                        QMessageBox::information(this, "Download Successful", "File downloaded successfully.");
+                    } else {
+                        QMessageBox::critical(this, "Error", "Error writing to file.");
+                    }
                 } else {
-                    QMessageBox::critical(this, "Error", "Error writing to file.");
+                    QMessageBox::critical(this, "Error", "Could not save downloaded file.");
                 }
             } else {
-                QMessageBox::critical(this, "Error", "Could not save downloaded file.");
+                QMessageBox::critical(this, "Error", "Download failed: " + reply->errorString());
             }
-        } else {
-            QMessageBox::critical(this, "Error", "Download failed: " + reply->errorString());
-        }
 
-        // Clean up resources
-        reply->deleteLater();
-        manager->deleteLater();
-    });
+            // Clean up resources
+            reply->deleteLater();
+            manager->deleteLater();
+        });
+
+    }
 }
+
+void MainWindow::readHudTxt()
+{
+
+}
+
 
 std::vector<QString> MainWindow::createImagesVector(QString fileName)
 {
@@ -183,4 +196,25 @@ void MainWindow::on_rightImageButton_clicked()
     currentHud->setImageNumber(index);
     setImages(ui->label_2, paths[index]);
 }
+
+
+void MainWindow::on_actionOptions_triggered()
+{
+    QInputDialog getTf2Path;
+    getTf2Path.setWindowTitle("Options");
+    getTf2Path.setLabelText("Enter TF2 custom path: ");
+    getTf2Path.setStyleSheet("* { }");
+    if (getTf2Path.exec() == QDialog::Accepted) {
+        currentPath = getTf2Path.textValue();
+    }
+
+}
+
+// QInputDialog tSelectFourMonthPeriod;
+// tSelectFourMonthPeriod.setFont(font);
+// tSelectFourMonthPeriod.setOption(QInputDialog::UseListViewForComboBoxItems);
+// tSelectFourMonthPeriod.setWindowTitle(tr("Print Options."));
+// tSelectFourMonthPeriod.setLabelText(tr("Selection:"));
+// tSelectFourMonthPeriod.setComboBoxItems(prepareFourMonthPerYearPeriod());
+// int ret = tSelectFourMonthPeriod.exec();
 
