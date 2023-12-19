@@ -23,12 +23,12 @@ public:
     std::vector<QString> createImagesVector(QString fileName);
     void setImages(QLabel *label, const QString imgPath);
     QString readHudTxt();
-    QString installFunction();
+    void installFunction();
     void writeHudTxt();
     void writePathTxt();
     QString readPathTxt();
     void uninstallHud(QString hudtxt);
-    bool extractHud(QString installPath);
+    bool extractHud(QString installPath) const;
 private slots:
 
     void on_button7Hud_clicked();

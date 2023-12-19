@@ -47,62 +47,62 @@ void MainWindow::on_installbutton_clicked()
         } else
         {
             uninstallHud(hudtxt);
-            QString installPath = installFunction();
-            extractHud(installPath);
+            installFunction();
             writeHudTxt();
         }
     }
 }
 
-QString MainWindow::installFunction()
+void MainWindow::installFunction ()
  {
     if (currentPath.isNull()) {
         QMessageBox::warning(this, "No TF2 path set", "Set a TF2 path in options to install HUD");
-    } else {
-        QString link = currentHud->getDownloadLink();
-        QNetworkAccessManager* manager = new QNetworkAccessManager(this);
-        QNetworkRequest request;
-        request.setUrl(QUrl(link));
+        return;
+    }
 
-        QNetworkReply* reply = manager->get(request);
+    QString link = currentHud->getDownloadLink();
 
-        QString installPath = currentPath + "/downloaded_file.zip";
-        QFile file(installPath);
+    QNetworkAccessManager* manager = new QNetworkAccessManager(this);
+    QNetworkRequest request;
+    request.setUrl(QUrl(link));
 
-        connect(reply, &QNetworkReply::finished, [=]() {
-            if (reply->error() == QNetworkReply::NoError) {
-                // Save the downloaded file
-                QByteArray data = reply->readAll();
+    QNetworkReply* reply = manager->get(request);
 
-                if (file.open(QIODevice::WriteOnly)) {
-                    qint64 bytesWritten = file.write(data);
-                    file.close();
+    connect(reply, &QNetworkReply::finished, [=]() {
+        if (reply->error() == QNetworkReply::NoError) {
+            // Save the downloaded file
+            QByteArray data = reply->readAll();
+            QString zipFilePath = currentPath + "/downloaded_file.zip";
 
-                    if (bytesWritten == data.size()) {
-                        QMessageBox::information(this, "Installation Successful", "File installed successfully to: " + installPath);
-                        // Call a function to install the file, e.g., extractHud(installPath);
-                    } else {
-                        QMessageBox::critical(this, "Error", "Error writing to file.");
-                    }
+            QFile file(zipFilePath);
+            if (file.open(QIODevice::WriteOnly)) {
+                qint64 bytesWritten = file.write(data);
+                file.close();
+
+                if (bytesWritten == data.size()) {
+                    QMessageBox::information(this, "Installation Successful", "File downloaded successfully to: " + zipFilePath);
+
+                    // Now you can extract the zip file using your extraction function
+                    extractHud(zipFilePath);
                 } else {
-                    QMessageBox::critical(this, "Error", "Could not save downloaded file.");
+                    QMessageBox::critical(this, "Error", "Error writing to file. Bytes written: " + QString::number(bytesWritten));
+                    QFile::remove(zipFilePath);  // Remove the incomplete file
                 }
             } else {
-                QMessageBox::critical(this, "Error", "Download failed: " + reply->errorString());
+                QMessageBox::critical(this, "Error", "Could not open file for writing. Error: " + file.errorString());
             }
+        } else {
+            QMessageBox::critical(this, "Error", "Download failed: " + reply->errorString());
+        }
 
-            // Clean up resources
-            // Remove the temporary downloaded file
-            if (file.exists()) {
-                file.remove();
-            }
-            reply->deleteLater();
-            manager->deleteLater();
-        });
-    }
+        // Clean up resources
+        reply->deleteLater();
+        manager->deleteLater();
+    });
 }
 
- bool MainWindow::extractHud(QString installPath)
+
+ bool MainWindow::extractHud(QString installPath) const
 {
      std::string zipFilePath = installPath.toStdString();
 

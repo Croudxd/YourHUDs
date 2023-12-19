@@ -11,7 +11,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # Set the paths to Minizip and zlib (adjust these paths accordingly)
 set(MINIZ_INCLUDE_DIR "C:/Users/benan/OneDrive/Documents/QT/YourHUDs/vcpkg/packages/miniz_x64-windows/include/miniz")
-set(MINIZ_LIBRARY "C:/Users/benan/OneDrive/Documents/QT/YourHUDs/vcpkg/packages/miniz_x64-windows/libminiz.lib")
+set(MINIZ_LIBRARY "C:/Users/benan/OneDrive/Documents/QT/YourHUDs/vcpkg/packages/miniz_x64-windows/lib/miniz.lib")
 
 # Include directory for Miniz
 include_directories(${MINIZ_INCLUDE_DIR})
