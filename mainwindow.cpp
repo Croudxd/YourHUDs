@@ -9,7 +9,8 @@
 #include <QUrl>
 #include <QMessageBox>
 #include <QInputDialog>
-#include <filesystem>
+#include <miniz.h>
+
 
 
 
@@ -46,17 +47,18 @@ void MainWindow::on_installbutton_clicked()
         } else
         {
             uninstallHud(hudtxt);
+            QString installPath = installFunction();
+            extractHud(installPath);
+            writeHudTxt();
         }
     }
 }
 
-void MainWindow::installFunction()
+QString MainWindow::installFunction()
  {
-
     if (currentPath.isNull()) {
         QMessageBox::warning(this, "No TF2 path set", "Set a TF2 path in options to install HUD");
     } else {
-
         QString link = currentHud->getDownloadLink();
         QNetworkAccessManager* manager = new QNetworkAccessManager(this);
         QNetworkRequest request;
@@ -64,47 +66,122 @@ void MainWindow::installFunction()
 
         QNetworkReply* reply = manager->get(request);
 
+        QString installPath = currentPath + "/downloaded_file.zip";
+        QFile file(installPath);
+
         connect(reply, &QNetworkReply::finished, [=]() {
             if (reply->error() == QNetworkReply::NoError) {
                 // Save the downloaded file
                 QByteArray data = reply->readAll();
-                QFile file("downloaded_file.zip");  // Change the filename as needed
 
                 if (file.open(QIODevice::WriteOnly)) {
                     qint64 bytesWritten = file.write(data);
                     file.close();
-                    file.remove();
 
                     if (bytesWritten == data.size()) {
-                        // Install the file to the specified path
-                        QString installPath = currentPath + "/downloaded_file.zip";
-                        if (QFile::copy("downloaded_file.zip", installPath)) {
-                            QMessageBox::information(this, "Installation Successful", "File installed successfully to: " + installPath);
-                        } else {
-                            QMessageBox::critical(this, "Error", "Error installing file to: " + installPath);
-                        }
+                        QMessageBox::information(this, "Installation Successful", "File installed successfully to: " + installPath);
+                        // Call a function to install the file, e.g., extractHud(installPath);
                     } else {
                         QMessageBox::critical(this, "Error", "Error writing to file.");
                     }
                 } else {
                     QMessageBox::critical(this, "Error", "Could not save downloaded file.");
                 }
-                file.close();
-                file.remove();
             } else {
                 QMessageBox::critical(this, "Error", "Download failed: " + reply->errorString());
             }
 
             // Clean up resources
             // Remove the temporary downloaded file
+            if (file.exists()) {
+                file.remove();
+            }
             reply->deleteLater();
             manager->deleteLater();
         });
     }
 }
 
- void MainWindow::uninstallHud(QString hudtxt){
+ bool MainWindow::extractHud(QString installPath)
+{
+     std::string zipFilePath = installPath.toStdString();
 
+     // Open the zip file
+     mz_zip_archive zip;
+     mz_bool success = mz_zip_reader_init_file(&zip, zipFilePath.c_str(), 0);
+
+     if (!success)
+     {
+         qDebug() << "Failed to open the zip file";
+         return false;
+     }
+
+     // Get the number of files in the zip archive
+     size_t numFiles = mz_zip_reader_get_num_files(&zip);
+
+     // Extract each file
+     for (size_t i = 0; i < numFiles; ++i)
+     {
+         mz_zip_archive_file_stat file_stat;
+         if (!mz_zip_reader_file_stat(&zip, i, &file_stat))
+         {
+             qDebug() << "Failed to get file stat";
+             mz_zip_reader_end(&zip);
+             return false;
+         }
+
+         // Allocate memory for file data
+         void* fileData = malloc(file_stat.m_uncomp_size);
+
+         // Read file data
+         if (mz_zip_reader_extract_to_mem_no_alloc(
+                 &zip, i, fileData, file_stat.m_uncomp_size, 0, nullptr, 0) != MZ_TRUE)
+         {
+             qDebug() << "Failed to extract file" << file_stat.m_filename;
+             free(fileData);
+             mz_zip_reader_end(&zip);
+             return false;
+         }
+
+         // Save the extracted file data to disk (you can customize the path as needed)
+         QString extractedFilePath = QString::fromStdString(file_stat.m_filename);
+         QFile extractedFile(extractedFilePath);
+         if (extractedFile.open(QIODevice::WriteOnly))
+         {
+             extractedFile.write(static_cast<const char*>(fileData), file_stat.m_uncomp_size);
+             extractedFile.close();
+         }
+
+         // Free allocated memory
+         free(fileData);
+     }
+
+     // Close the zip archive
+     mz_zip_reader_end(&zip);
+
+     // Remove the zip file after extraction
+     QFile::remove(installPath);
+
+     return true;
+}
+
+ void MainWindow::uninstallHud(QString hudtxt){
+     QDir hudDir(hudtxt);
+
+     // Check if the directory exists
+     if (hudDir.exists()) {
+         // Remove all files and subdirectories within the directory
+         hudDir.removeRecursively();
+
+         // Check if the removal was successful
+         if (hudDir.exists()) {
+             QMessageBox::critical(this, "Error", "Failed to uninstall HUD. Please ensure the directory is not in use.");
+         } else {
+             QMessageBox::information(this, "Uninstall Successful", "HUD uninstalled successfully.");
+         }
+     } else {
+         QMessageBox::warning(this, "Directory Not Found", "The specified directory does not exist.");
+     }
  }
 
 
@@ -150,7 +227,9 @@ void MainWindow::writeHudTxt()
         // The file exists, open it in write mode to update the content
         if (pathFile.open(QIODevice::WriteOnly | QIODevice::Text)) {
             QTextStream out(&pathFile);
-            out << currentPath + "/" + currentHud->getHudFileName();
+            currentPath.append(QChar('\\'));;
+            currentPath.append(currentHud->getHudFileName());
+            qDebug() << currentHud->getHudFileName();
             pathFile.close();
 
             qDebug() << "TF2 HUD path updated in file: " << currentPath;

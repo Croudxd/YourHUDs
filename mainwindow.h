@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include "hud.h"
 #include <QLabel>
+#include <miniz.h>
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -22,11 +23,12 @@ public:
     std::vector<QString> createImagesVector(QString fileName);
     void setImages(QLabel *label, const QString imgPath);
     QString readHudTxt();
-    void installFunction();
+    QString installFunction();
     void writeHudTxt();
     void writePathTxt();
     QString readPathTxt();
     void uninstallHud(QString hudtxt);
+    bool extractHud(QString installPath);
 private slots:
 
     void on_button7Hud_clicked();
