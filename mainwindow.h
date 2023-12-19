@@ -54,7 +54,7 @@ public:
      *  This function uses QNetwork library to install hud->downloadlink.
      * @brief installFunction
      */
-    void installFunction();
+    bool installFunction();
     /**
      * This function will take the hud->hudFileName, and write it a txt file called hud.txt. This function is only called when a hud is installed to keep
      * track of whether or not a hud is installed into custom.
@@ -78,14 +78,14 @@ public:
      * @brief uninstallHud
      * @param hudtxt
      */
-    void uninstallHud(QString hudtxt);
+    bool uninstallHud(QString hudtxt);
     /**
      * Function uses miniz library: (https://github.com/richgel999/miniz) will extract the hud from the downloaded_file.zip and then delete the zip.
      * @brief extractHud
      * @param installPath
      * @return
      */
-    bool extractHud(QString installPath) const;
+    bool extractHud(QString installPath,  std::function<void(bool)> callback) const;
 private slots:
 
     void on_button7Hud_clicked();
