@@ -18,6 +18,12 @@ MainWindow::MainWindow(QWidget *parent)
     , currentHud(nullptr)
 {
     ui->setupUi(this);
+    this->setFixedWidth(800);
+    this->setFixedHeight(600);
+    QMenuBar *q = this->menuBar();
+    q->setStyleSheet("color: white");
+
+
 
 
 }
