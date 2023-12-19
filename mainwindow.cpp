@@ -74,6 +74,10 @@ void MainWindow::installFunction ()
             QByteArray data = reply->readAll();
             QString zipFilePath = currentPath + "/downloaded_file.zip";
 
+            // Ensure that the directory exists
+            QDir dir;
+            dir.mkpath(currentPath);
+
             QFile file(zipFilePath);
             if (file.open(QIODevice::WriteOnly)) {
                 qint64 bytesWritten = file.write(data);
@@ -112,7 +116,7 @@ void MainWindow::installFunction ()
 
      if (!success)
      {
-         qDebug() << "Failed to open the zip file";
+         qDebug() << "Failed to open the zip file: " << zipFilePath.c_str();
          return false;
      }
 
@@ -125,7 +129,7 @@ void MainWindow::installFunction ()
          mz_zip_archive_file_stat file_stat;
          if (!mz_zip_reader_file_stat(&zip, i, &file_stat))
          {
-             qDebug() << "Failed to get file stat";
+             qDebug() << "Failed to get file stat for file at index " << i;
              mz_zip_reader_end(&zip);
              return false;
          }
@@ -148,8 +152,23 @@ void MainWindow::installFunction ()
          QFile extractedFile(extractedFilePath);
          if (extractedFile.open(QIODevice::WriteOnly))
          {
-             extractedFile.write(static_cast<const char*>(fileData), file_stat.m_uncomp_size);
+             qint64 bytesWritten = extractedFile.write(static_cast<const char*>(fileData), file_stat.m_uncomp_size);
              extractedFile.close();
+
+             if (bytesWritten != file_stat.m_uncomp_size)
+             {
+                 qDebug() << "Error writing to file: " << extractedFilePath;
+                 free(fileData);
+                 mz_zip_reader_end(&zip);
+                 return false;
+             }
+         }
+         else
+         {
+             qDebug() << "Could not open file for writing: " << extractedFilePath;
+             free(fileData);
+             mz_zip_reader_end(&zip);
+             return false;
          }
 
          // Free allocated memory
