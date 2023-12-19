@@ -33,6 +33,10 @@ void hud::setImageNumber(const int index)
 {
     this->imageNumber = index;
 }
+void hud::setHudFileName(const QString hudFileName)
+{
+    this->hudFileName = hudFileName;
+}
 
 //Getters
 QString hud::getName() const
@@ -58,4 +62,8 @@ std::vector<QString> hud::getImages() const
 int hud::getImageNumber() const
 {
     return imageNumber;
+}
+QString hud::getHudFileName() const
+{
+    return hudFileName;
 }

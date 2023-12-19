@@ -18,10 +18,15 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
-    void setHud(QString name, QString description, QString creator, QString downloadlink);
+    void setHud(QString name, QString description, QString creator, QString downloadlink, QString hudFileName);
     std::vector<QString> createImagesVector(QString fileName);
     void setImages(QLabel *label, const QString imgPath);
-    void readHudTxt();
+    QString readHudTxt();
+    void installFunction();
+    void writeHudTxt();
+    void writePathTxt();
+    QString readPathTxt();
+    void uninstallHud(QString hudtxt);
 private slots:
 
     void on_button7Hud_clicked();

@@ -15,6 +15,7 @@ private:
     QString downloadlink;
     std::vector<QString> images;
     int imageNumber=0;
+    QString hudFileName;
 
 public:
     //Constructor
@@ -28,6 +29,7 @@ public:
     void setDownloadLink(const QString &downloadlink);
     void setImages(const std::vector<QString> &imagesVector);
     void setImageNumber(const int index);
+    void setHudFileName(const QString hudFileName);
 
     //Getter functions.
 
@@ -37,6 +39,7 @@ public:
     QString getDownloadLink() const;
     std::vector<QString> getImages() const;
     int getImageNumber() const;
+    QString getHudFileName() const;
 
 };
 
