@@ -50,6 +50,12 @@ color: rgb(240, 235, 229);</string>
       <height>41</height>
      </rect>
     </property>
+    <property name="font">
+     <font>
+      <family>Segoe UI Black</family>
+      <bold>true</bold>
+     </font>
+    </property>
     <property name="styleSheet">
      <string notr="true">background-color: rgb(240, 235, 229);
 color: rgb(21, 26, 48);</string>
@@ -67,6 +73,11 @@ color: rgb(21, 26, 48);</string>
       <height>81</height>
      </rect>
     </property>
+    <property name="font">
+     <font>
+      <family>Tahoma</family>
+     </font>
+    </property>
     <property name="styleSheet">
      <string notr="true">background-color: rgb(49, 49, 77);
 color: rgb(240, 235, 229);
@@ -82,8 +93,29 @@ border-color: rgba(255, 255, 255, 0);</string>
       <height>381</height>
      </rect>
     </property>
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
+    </property>
+    <property name="acceptDrops">
+     <bool>false</bool>
+    </property>
+    <property name="lineWidth">
+     <number>0</number>
+    </property>
+    <property name="verticalScrollBarPolicy">
+     <enum>Qt::ScrollBarAlwaysOn</enum>
+    </property>
+    <property name="horizontalScrollBarPolicy">
+     <enum>Qt::ScrollBarAlwaysOff</enum>
+    </property>
+    <property name="sizeAdjustPolicy">
+     <enum>QAbstractScrollArea::AdjustToContentsOnFirstShow</enum>
+    </property>
     <property name="widgetResizable">
-     <bool>true</bool>
+     <bool>false</bool>
     </property>
     <widget class="QWidget" name="scrollAreaWidgetContents_2">
      <property name="geometry">
@@ -103,7 +135,13 @@ border-color: rgba(255, 255, 255, 0);</string>
         <height>391</height>
        </rect>
       </property>
-      <layout class="QVBoxLayout" name="verticalLayout_3">
+      <layout class="QVBoxLayout" name="verticalLayout_3" stretch="0,0,0,0,0,0,0,0,0,0,0">
+       <property name="spacing">
+        <number>0</number>
+       </property>
+       <property name="sizeConstraint">
+        <enum>QLayout::SetDefaultConstraint</enum>
+       </property>
        <item>
         <widget class="QPushButton" name="button7Hud">
          <property name="maximumSize">
@@ -112,9 +150,14 @@ border-color: rgba(255, 255, 255, 0);</string>
            <height>50</height>
           </size>
          </property>
+         <property name="font">
+          <font>
+           <family>Segoe UI Black</family>
+           <bold>true</bold>
+          </font>
+         </property>
          <property name="styleSheet">
           <string notr="true">color: rgb(0, 0, 0);
-alternate-background-color: rgb(0, 170, 0);
 background-color: rgb(179, 179, 179);</string>
          </property>
          <property name="text">
@@ -129,6 +172,12 @@ background-color: rgb(179, 179, 179);</string>
            <width>400</width>
            <height>50</height>
           </size>
+         </property>
+         <property name="font">
+          <font>
+           <family>Segoe UI Black</family>
+           <bold>true</bold>
+          </font>
          </property>
          <property name="styleSheet">
           <string notr="true">color: rgb(0, 0, 0);
@@ -146,6 +195,196 @@ background-color: rgb(179, 179, 179);</string>
            <width>400</width>
            <height>50</height>
           </size>
+         </property>
+         <property name="font">
+          <font>
+           <family>Segoe UI Black</family>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">color: rgb(0, 0, 0);
+background-color: rgb(179, 179, 179);</string>
+         </property>
+         <property name="text">
+          <string>Sayo2</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="buttonSayoHUD_2">
+         <property name="maximumSize">
+          <size>
+           <width>400</width>
+           <height>50</height>
+          </size>
+         </property>
+         <property name="font">
+          <font>
+           <family>Segoe UI Black</family>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">color: rgb(0, 0, 0);
+background-color: rgb(179, 179, 179);</string>
+         </property>
+         <property name="text">
+          <string>Sayo2</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="buttonSayoHUD_3">
+         <property name="maximumSize">
+          <size>
+           <width>400</width>
+           <height>50</height>
+          </size>
+         </property>
+         <property name="font">
+          <font>
+           <family>Segoe UI Black</family>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">color: rgb(0, 0, 0);
+background-color: rgb(179, 179, 179);</string>
+         </property>
+         <property name="text">
+          <string>Sayo2</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="buttonSayoHUD_4">
+         <property name="maximumSize">
+          <size>
+           <width>400</width>
+           <height>50</height>
+          </size>
+         </property>
+         <property name="font">
+          <font>
+           <family>Segoe UI Black</family>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">color: rgb(0, 0, 0);
+background-color: rgb(179, 179, 179);</string>
+         </property>
+         <property name="text">
+          <string>Sayo2</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="buttonSayoHUD_6">
+         <property name="maximumSize">
+          <size>
+           <width>400</width>
+           <height>50</height>
+          </size>
+         </property>
+         <property name="font">
+          <font>
+           <family>Segoe UI Black</family>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">color: rgb(0, 0, 0);
+background-color: rgb(179, 179, 179);</string>
+         </property>
+         <property name="text">
+          <string>Sayo2</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="buttonSayoHUD_7">
+         <property name="maximumSize">
+          <size>
+           <width>400</width>
+           <height>50</height>
+          </size>
+         </property>
+         <property name="font">
+          <font>
+           <family>Segoe UI Black</family>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">color: rgb(0, 0, 0);
+background-color: rgb(179, 179, 179);</string>
+         </property>
+         <property name="text">
+          <string>Sayo2</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="buttonSayoHUD_8">
+         <property name="maximumSize">
+          <size>
+           <width>400</width>
+           <height>50</height>
+          </size>
+         </property>
+         <property name="font">
+          <font>
+           <family>Segoe UI Black</family>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">color: rgb(0, 0, 0);
+background-color: rgb(179, 179, 179);</string>
+         </property>
+         <property name="text">
+          <string>Sayo2</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="buttonSayoHUD_9">
+         <property name="maximumSize">
+          <size>
+           <width>400</width>
+           <height>50</height>
+          </size>
+         </property>
+         <property name="font">
+          <font>
+           <family>Segoe UI Black</family>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">color: rgb(0, 0, 0);
+background-color: rgb(179, 179, 179);</string>
+         </property>
+         <property name="text">
+          <string>Sayo2</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="buttonSayoHUD_5">
+         <property name="maximumSize">
+          <size>
+           <width>400</width>
+           <height>50</height>
+          </size>
+         </property>
+         <property name="font">
+          <font>
+           <family>Segoe UI Black</family>
+           <bold>true</bold>
+          </font>
          </property>
          <property name="styleSheet">
           <string notr="true">color: rgb(0, 0, 0);
@@ -200,6 +439,10 @@ background-color: rgb(179, 179, 179);</string>
       <height>24</height>
      </rect>
     </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgb(49, 49, 77);
+color: rgb(240, 235, 229);</string>
+    </property>
     <property name="text">
      <string>&lt;</string>
     </property>
@@ -212,6 +455,10 @@ background-color: rgb(179, 179, 179);</string>
       <width>80</width>
       <height>24</height>
      </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgb(49, 49, 77);
+color: rgb(240, 235, 229);</string>
     </property>
     <property name="text">
      <string>&gt;</string>
