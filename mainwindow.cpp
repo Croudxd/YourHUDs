@@ -39,10 +39,15 @@ void MainWindow::on_installbutton_clicked()
     else
     {
         currentPath = pathtxt;
+        qDebug() << "before reading hud.txt";
         QString hudtxt = readHudTxt();
+        qDebug() << "After reading hud.txt";
         if(hudtxt.isNull()){
             if(installFunction()){
+                qDebug() << "Before writing hud.txt";
                 writeHudTxt();
+                qDebug() << "After writing hud.txt";
+
                 QMessageBox::information(this, "Installed", "new HUD successfully installed");
                 return;
             }
@@ -53,10 +58,12 @@ void MainWindow::on_installbutton_clicked()
             }
         } else
         {
-            if(uninstallHud(hudtxt)){
-                if(installFunction()){
-                    writeHudTxt();
-                    return;
+            if(!hudtxt.isNull()){
+                if(uninstallHud(hudtxt)){
+                    if(installFunction()){
+                        writeHudTxt();
+                        return;
+                    }
                 }
             }
         }
@@ -91,12 +98,12 @@ void MainWindow::on_installbutton_clicked()
                                 QMessageBox::information(this, "Installation Successful", "File downloaded successfully to: " + zipFilePath);
                                 extractHud(zipFilePath, [=](bool extractionResult) {
                                     if (extractionResult) {
-                                        return true;
+                                        qDebug() << "Sucessful extraction";
                                     }
                                     else
                                     {
                                         QMessageBox::critical(this, "ZIP", "Could not unzip downloaded file");
-                                        return false;
+                                        qDebug() << "Extraction failed";
                                     }
                                 });
                             }
@@ -148,12 +155,13 @@ bool MainWindow::extractHud(QString installPath, std::function<void(bool)> callb
          }
          void* fileData = malloc(file_stat.m_uncomp_size);
 
-         if (mz_zip_reader_extract_to_mem_no_alloc(
-                 &zip, i, fileData, file_stat.m_uncomp_size, 0, nullptr, 0) != MZ_TRUE)
+         if (mz_zip_reader_extract_to_mem_no_alloc(&zip, i, fileData, file_stat.m_uncomp_size, 0, nullptr, 0) != MZ_TRUE)
          {
              qDebug() << "Failed to extract file" << file_stat.m_filename;
              free(fileData);
              mz_zip_reader_end(&zip);
+             QFile::remove(installPath);
+             callback(true);
              return false;
          }
 
@@ -218,16 +226,28 @@ QString MainWindow::readHudTxt()
 {
     QString filePath = "hud.txt";
     QFile hudFile(filePath);
+
+    if (!hudFile.exists())
+    {
+        qDebug() << "Error: " << filePath << " does not exist.";
+        return QString();
+    }
+
     if (hudFile.open(QIODevice::ReadOnly | QIODevice::Text))
     {
         QTextStream in(&hudFile);
         QString content = in.readAll();
         hudFile.close();
+        if(content.isNull())
+        {
+            qDebug() << "Error: hud.txt is empty";
+            return QString();
+        }
         return content;
     }
     else
     {
-        qDebug() << "Error: Could not open hud.txt for reading.";
+        qDebug() << "Error: Could not open" << filePath << " for reading.";
         return QString();
     }
 }
@@ -261,8 +281,8 @@ void MainWindow::writeHudTxt()
         if (pathFile.open(QIODevice::WriteOnly | QIODevice::Text))
         {
             QTextStream out(&pathFile);
-            currentPath.append(QChar('\\'));
-            currentPath.append(currentHud->getHudFileName());
+            out << "\\";
+            out << currentHud->getHudFileName();
             qDebug() << currentHud->getHudFileName();
             pathFile.close();
 
