@@ -60,7 +60,7 @@ public:
      * track of whether or not a hud is installed into custom.
      * @brief writeHudTxt
      */
-    void writeHudTxt();
+    bool writeHudTxt();
     /**
      * This function writes the currentPath QString variable to a txt file, so when user's close the application it will save the locaiton of the custom folder in path.txt.
      * @brief writePathTxt
@@ -85,7 +85,7 @@ public:
      * @param installPath
      * @return
      */
-    bool extractHud(QString installPath,  std::function<void(bool)> callback) const;
+    bool extractHud(const QString &zipFilePath, const QString& extractPath) ;
 private slots:
 
     void on_button7Hud_clicked();
@@ -104,5 +104,8 @@ private:
     Ui::MainWindow *ui;
     hud *currentHud;
     QString currentPath;
+
+signals:
+    void installationComplete(const QString& zipFilePath, const QString& installPath);
 };
 #endif // MAINWINDOW_H
