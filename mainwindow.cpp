@@ -141,6 +141,7 @@ bool MainWindow::extractHud(QString installPath, std::function<void(bool)> callb
      if (!success)
      {
          qDebug() << "Failed to open the zip file: " << zipFilePath.c_str();
+         callback(false);
          return false;
      }
      size_t numFiles = mz_zip_reader_get_num_files(&zip);
@@ -151,6 +152,7 @@ bool MainWindow::extractHud(QString installPath, std::function<void(bool)> callb
          {
              qDebug() << "Failed to get file stat for file at index " << i;
              mz_zip_reader_end(&zip);
+             callback(false);
              return false;
          }
          void* fileData = malloc(file_stat.m_uncomp_size);
@@ -161,12 +163,13 @@ bool MainWindow::extractHud(QString installPath, std::function<void(bool)> callb
              free(fileData);
              mz_zip_reader_end(&zip);
              QFile::remove(installPath);
-             callback(true);
+             callback(false);
              return false;
          }
 
          QString extractedFilePath = QString::fromStdString(file_stat.m_filename);
          QFile extractedFile(extractedFilePath);
+         qDebug() << "Extracted file: " << extractedFilePath;
          if (extractedFile.open(QIODevice::WriteOnly))
          {
              qint64 bytesWritten = extractedFile.write(static_cast<const char*>(fileData), file_stat.m_uncomp_size);
@@ -177,6 +180,7 @@ bool MainWindow::extractHud(QString installPath, std::function<void(bool)> callb
                  qDebug() << "Error writing to file: " << extractedFilePath;
                  free(fileData);
                  mz_zip_reader_end(&zip);
+                 callback(false);
                  return false;
              }
          }
@@ -185,16 +189,16 @@ bool MainWindow::extractHud(QString installPath, std::function<void(bool)> callb
              qDebug() << "Could not open file for writing: " << extractedFilePath;
              free(fileData);
              mz_zip_reader_end(&zip);
+             callback(false);
              return false;
          }
 
          free(fileData);
-         return false;
      }
 
      mz_zip_reader_end(&zip);
      QFile::remove(installPath);
-     callback(false);
+     callback(true);
      return false;
 }
 
@@ -276,37 +280,19 @@ void MainWindow::writeHudTxt()
     QString filePath = "hud.txt";
     QFile pathFile(filePath);
 
-    if (pathFile.exists())
+    if (pathFile.open(QIODevice::WriteOnly | QIODevice::Text))
     {
-        if (pathFile.open(QIODevice::WriteOnly | QIODevice::Text))
-        {
-            QTextStream out(&pathFile);
-            out << "\\";
-            out << currentHud->getHudFileName();
-            qDebug() << currentHud->getHudFileName();
-            pathFile.close();
+        QTextStream out(&pathFile);
+        out << currentPath;
+        out << "\\";
+        out << currentHud->getHudFileName();
+        pathFile.close();
 
-            qDebug() << "TF2 HUD path updated in file: " << currentPath;
-        }
-        else
-        {
-            qDebug() << "Error: Could not update TF2 path in file.";
-        }
+        qDebug() << "TF2 HUD path updated in file: " << currentPath;
     }
     else
     {
-        if (pathFile.open(QIODevice::WriteOnly | QIODevice::Text))
-        {
-            QTextStream out(&pathFile);
-            out << currentPath;
-            pathFile.close();
-
-            qDebug() << "TF2 path saved to new file: " << currentPath;
-        }
-        else
-        {
-            qDebug() << "Error: Could not save TF2 path to file.";
-        }
+        qDebug() << "Error: Could not update TF2 path in file.";
     }
 }
 
@@ -315,35 +301,17 @@ void MainWindow::writePathTxt()
 
     QString filePath = "path.txt";
     QFile pathFile(filePath);
-    if (pathFile.exists())
+    if (pathFile.open(QIODevice::WriteOnly | QIODevice::Text))
     {
-        if (pathFile.open(QIODevice::WriteOnly | QIODevice::Text))
-        {
-            QTextStream out(&pathFile);
-            out << currentPath;
-            pathFile.close();
+        QTextStream out(&pathFile);
+        out << currentPath;
+        pathFile.close();
 
-            qDebug() << "TF2 path updated in file: " << currentPath;
-        }
-        else
-        {
-            qDebug() << "Error: Could not update TF2 path in file.";
-        }
+        qDebug() << "TF2 path updated in file: " << currentPath;
     }
     else
     {
-        if (pathFile.open(QIODevice::WriteOnly | QIODevice::Text))
-        {
-            QTextStream out(&pathFile);
-            out << currentPath;
-            pathFile.close();
-
-            qDebug() << "TF2 path saved to new file: " << currentPath;
-        }
-        else
-        {
-            qDebug() << "Error: Could not save TF2 path to file.";
-        }
+        qDebug() << "Error: Could not update TF2 path in file.";
     }
 }
 
