@@ -21,13 +21,17 @@ set(PROJECT_SOURCES
     hud.h
     hud.cpp
     resource.qrc
+    unzip.py  # Add the Python script to the sources
 )
 
+# Copy Python script to build directory
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/unzip.py ${CMAKE_CURRENT_BINARY_DIR}/unzip.py COPYONLY)
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(YourHUDs
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
+
     )
 else()
     if(ANDROID)
@@ -43,8 +47,6 @@ endif()
 
 # Link against Miniz library
 target_link_libraries(YourHUDs PRIVATE Qt${QT_VERSION_MAJOR}::Widgets Qt${QT_VERSION_MAJOR}::Network)
-
-
 
 # Set target properties and install
 if(${QT_VERSION} VERSION_LESS 6.1.0)
@@ -65,6 +67,7 @@ install(TARGETS YourHUDs
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 )
+
 if(QT_VERSION_MAJOR EQUAL 6)
     qt_finalize_executable(YourHUDs)
 endif()

@@ -4,7 +4,6 @@
 #include <QMainWindow>
 #include "hud.h"
 #include <QLabel>
-#include <miniz.h>
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -19,7 +18,9 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
-
+    hud *currentHud;
+    QString currentPath;
+    QString getCurrentPath() const;
     /**
      * Takes a number of parameters, will create a hud.c object and assign it properties given within function.
      * @brief setHud
@@ -86,6 +87,7 @@ public:
      * @return
      */
     bool extractHud(const QString &zipFilePath) ;
+
 private slots:
 
     void on_button7Hud_clicked();
@@ -102,8 +104,7 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
-    hud *currentHud;
-    QString currentPath;
+
 
 };
 #endif // MAINWINDOW_H

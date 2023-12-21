@@ -1,7 +1,6 @@
 #include "mainwindow.h"
 #include "./ui_mainwindow.h"
 #include "hud.h"
-#include <iostream>
 #include <QFile>
 #include <QDir>
 #include <QNetworkAccessManager>
@@ -9,12 +8,12 @@
 #include <QUrl>
 #include <QMessageBox>
 #include <QInputDialog>
-#include <filesystem>
-#include <fstream>
 #include <QDebug>
 #include <QFileDialog>
 #include <QSettings>
 #include <QTimer>
+#include <QProcess>
+#include <QPointer>
 
 
 
@@ -41,14 +40,13 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_installbutton_clicked()
 {
-    std::cout << "Is this even being called?" << std::endl;
         QString hudtxt = readHudTxt();
         if(hudtxt.isNull()){
             QString installPath = installHud();
             if(!installPath.isNull()){
                 if(writeHudTxt())
                 {
-                    QTimer::singleShot(5000, this, [&]() {
+                    QTimer::singleShot(10000, this, [&]() {
                         try
                             {
                             extractHud(installPath);
@@ -104,6 +102,12 @@ void MainWindow::on_installbutton_clicked()
 
 QString MainWindow::installHud()
 {
+
+    if(!currentHud)
+    {
+        qDebug() << "Current hud is null";
+        return QString();
+    }
     QString downloadLink = currentHud->getDownloadLink();
 
     // Ask the user to select a location to save the file
@@ -154,8 +158,37 @@ QString MainWindow::installHud()
 
 bool MainWindow::extractHud(const QString &zipFilePath)
 {
-}
+    QString zipPath = zipFilePath;
+    QStringList param;
+    param << "unzip.py" << zipPath;  // Adjust the order of parameters
 
+    QPointer<QProcess> q = new QProcess;
+    q->setProgram("python");  // Set the program to "python"
+    q->setArguments(param);
+
+    q->start();
+    if (!q->waitForStarted()) {
+        qDebug() << "Failed to start QProcess:" << q->errorString();
+        delete q;  // Cleanup if process failed to start
+        return false;
+    }
+
+    if (!q->waitForFinished(-1)) {
+        qDebug() << "Error while waiting for QProcess to finish:" << q->errorString();
+        delete q;  // Cleanup if process failed to finish
+        return false;
+    }
+
+    if (q->exitCode() != 0) {
+        qDebug() << "Extraction failed. exit code:" << q->exitCode();
+        qDebug() << "Error:" << q->errorString();
+        delete q;  // Cleanup if extraction failed
+        return false;
+    }
+
+    delete q;  // Cleanup after successful extraction
+    return true;
+}
 
 bool MainWindow::uninstallHud(QString hudtxt)
 {
@@ -237,7 +270,7 @@ bool MainWindow::writeHudTxt()
     QString filePath = "hud.txt";
     QFile pathFile(filePath);
 
-    if (pathFile.open(QIODevice::WriteOnly | QIODevice::Text))
+    if (currentHud && pathFile.open(QIODevice::WriteOnly | QIODevice::Text))
     {
         QTextStream out(&pathFile);
         out << currentPath;
