@@ -54,7 +54,7 @@ public:
      *  This function uses QNetwork library to install hud->downloadlink.
      * @brief installFunction
      */
-    bool installFunction();
+    QString installHud();
     /**
      * This function will take the hud->hudFileName, and write it a txt file called hud.txt. This function is only called when a hud is installed to keep
      * track of whether or not a hud is installed into custom.

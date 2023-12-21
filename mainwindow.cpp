@@ -14,6 +14,8 @@
 #include <fstream>
 #include <QDebug>
 #include <QFileDialog>
+#include <QSettings>
+#include <QTimer>
 
 
 namespace fs = std::filesystem;
@@ -42,12 +44,26 @@ void MainWindow::on_installbutton_clicked()
 {
         QString hudtxt = readHudTxt();
         if(hudtxt.isNull()){
-            if(installFunction()){
+            QString installPath = installHud();
+            if(!installPath.isNull()){
                 if(writeHudTxt())
                 {
-                    return;
+                    QTimer::singleShot(5000, this, [&]() {
+                        try
+                            {
+                            extractHud(installPath);
+
+                } catch (const std::exception& e)
+                    {
+                            qDebug() << "Exception during extraction: " << e.what();
+                        }
+                    });
                 }
 
+            }
+            else
+            {
+                QMessageBox::warning(this, "Install/extraction error", "Error sending extract information");
             }
         }
         else
@@ -56,13 +72,27 @@ void MainWindow::on_installbutton_clicked()
             {
                 if(uninstallHud(hudtxt))
                 {
-                    if(installFunction())
+                    QString installPath = installHud();
+                    if(!installPath.isNull())
                     {
                         if(writeHudTxt())
                         {
-                        return;
+                            QTimer::singleShot(5000, this, [&]() {
+                                try
+                                {
+                                    extractHud(installPath);
+
+                                } catch (const std::exception& e)
+                                {
+                                    qDebug() << "Exception during extraction: " << e.what();
+                                }
+                            });
                         }
 
+                    }
+                    else
+                    {
+                        QMessageBox::warning(this, "Install/extraction error", "Error sending extract information");
                     }
                 }
             }
@@ -70,9 +100,55 @@ void MainWindow::on_installbutton_clicked()
     }
 
 
-bool MainWindow::installFunction ()
-{
 
+
+QString MainWindow::installHud()
+{
+    QString downloadLink = currentHud->getDownloadLink();
+
+    // Ask the user to select a location to save the file
+    QString installPath = QFileDialog::getExistingDirectory(this, "Select directory to install", QDir::homePath());
+
+    // Check if the user canceled the dialog
+    if (installPath.isEmpty()) {
+        qDebug() << "Installation canceled by the user.";
+        return QString();
+    }
+
+    QString zipName = "downloaded_file.zip";
+    // Create a network manager to handle the download
+    QNetworkAccessManager manager;
+    QNetworkRequest request(downloadLink);
+    QNetworkReply* reply = manager.get(request);
+
+    // Wait for the download to finish
+    QEventLoop loop;
+    QObject::connect(reply, &QNetworkReply::finished, &loop, &QEventLoop::quit);
+    loop.exec();
+
+    // Check if the download was successful
+    if (reply->error() != QNetworkReply::NoError) {
+        qDebug() << "Error downloading file: " << reply->errorString();
+        reply->deleteLater();
+        return QString();
+    }
+
+    // Save the downloaded data to the selected file
+    QString zipFilePath = installPath + "\\" + zipName;
+    QFile zipFile(zipFilePath);
+    if (zipFile.open(QIODevice::WriteOnly)) {
+        zipFile.write(reply->readAll());
+        zipFile.close();
+        qDebug() << "Installation successful!";
+        return zipFilePath;
+        return QString();
+    } else {
+        qDebug() << "Error saving file to disk.";
+        return QString();
+    }
+
+    // Clean up the network reply
+    reply->deleteLater();
 }
 
 
@@ -126,7 +202,6 @@ bool MainWindow::extractHud(const QString &zipFilePath)
 
     return true;
 }
-
 
 
 bool MainWindow::uninstallHud(QString hudtxt)
