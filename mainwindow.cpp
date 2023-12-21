@@ -27,7 +27,8 @@ MainWindow::MainWindow(QWidget *parent)
     this->setFixedWidth(800);
     this->setFixedHeight(600);
     QMenuBar *q = this->menuBar();
-    q->setStyleSheet("color: white");
+    q->setStyleSheet("color: grey");
+    setWindowIcon(QIcon("logo.png"));
 }
 
 
@@ -378,7 +379,7 @@ void MainWindow::on_actionOptions_triggered()
     QInputDialog getTf2Path;
     getTf2Path.setWindowTitle("Options");
     getTf2Path.setLabelText("Enter TF2 custom path: ");
-    getTf2Path.setStyleSheet("* {color:white }");
+    getTf2Path.setStyleSheet("* {color:black }");
     if (getTf2Path.exec() == QDialog::Accepted)
     {
         currentPath = getTf2Path.textValue();
