@@ -9,7 +9,7 @@
 #include <QUrl>
 #include <QMessageBox>
 #include <QInputDialog>
-#include <miniz.h>
+#include "miniz/miniz.h"
 #include <filesystem>
 #include <fstream>
 #include <QDebug>

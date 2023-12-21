@@ -9,13 +9,6 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# Set the paths to Minizip and zlib (adjust these paths accordingly)
-set(MINIZ_INCLUDE_DIR "C:/Users/benan/OneDrive/Documents/QT/YourHUDs/vcpkg/packages/miniz_x64-windows/include/miniz")
-set(MINIZ_LIBRARY "C:/Users/benan/OneDrive/Documents/QT/YourHUDs/vcpkg/packages/miniz_x64-windows/lib/miniz.lib")
-
-# Include directory for Miniz
-include_directories(${MINIZ_INCLUDE_DIR})
-
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets Network)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets Network)
 
@@ -28,6 +21,8 @@ set(PROJECT_SOURCES
     hud.h
     hud.cpp
     resource.qrc
+    miniz/miniz.c
+    miniz/miniz.h
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
@@ -48,7 +43,10 @@ else()
 endif()
 
 # Link against Miniz library
-target_link_libraries(YourHUDs PRIVATE Qt${QT_VERSION_MAJOR}::Widgets Qt${QT_VERSION_MAJOR}::Network ${MINIZ_LIBRARY})
+target_link_libraries(YourHUDs PRIVATE Qt${QT_VERSION_MAJOR}::Widgets Qt${QT_VERSION_MAJOR}::Network)
+target_link_libraries(YourHUDs PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/miniz/lib/libminiz.a)
+
+target_include_directories(YourHUDs PRIVATE miniz)
 
 # Set target properties and install
 if(${QT_VERSION} VERSION_LESS 6.1.0)
@@ -69,7 +67,7 @@ install(TARGETS YourHUDs
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 )
-
+install(FILES miniz/miniz.h DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
 if(QT_VERSION_MAJOR EQUAL 6)
     qt_finalize_executable(YourHUDs)
 endif()
