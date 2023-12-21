@@ -28,7 +28,7 @@ MainWindow::MainWindow(QWidget *parent)
     this->setFixedHeight(600);
     QMenuBar *q = this->menuBar();
     q->setStyleSheet("color: grey");
-    setWindowIcon(QIcon("logo.png"));
+    setWindowIcon(QIcon(":/logo/logo.png"));
 }
 
 

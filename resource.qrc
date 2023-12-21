@@ -9,4 +9,7 @@
         <file>imgs/BudHUD/image3.jpg</file>
         <file>imgs/BudHUD/image4.jpg</file>
     </qresource>
+    <qresource prefix="/logo">
+        <file>logo.png</file>
+    </qresource>
 </RCC>
