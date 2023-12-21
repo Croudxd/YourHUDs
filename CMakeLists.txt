@@ -21,9 +21,8 @@ set(PROJECT_SOURCES
     hud.h
     hud.cpp
     resource.qrc
-    miniz/miniz.c
-    miniz/miniz.h
 )
+
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(YourHUDs
@@ -44,9 +43,8 @@ endif()
 
 # Link against Miniz library
 target_link_libraries(YourHUDs PRIVATE Qt${QT_VERSION_MAJOR}::Widgets Qt${QT_VERSION_MAJOR}::Network)
-target_link_libraries(YourHUDs PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/miniz/lib/libminiz.a)
 
-target_include_directories(YourHUDs PRIVATE miniz)
+
 
 # Set target properties and install
 if(${QT_VERSION} VERSION_LESS 6.1.0)
@@ -67,7 +65,6 @@ install(TARGETS YourHUDs
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 )
-install(FILES miniz/miniz.h DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
 if(QT_VERSION_MAJOR EQUAL 6)
     qt_finalize_executable(YourHUDs)
 endif()

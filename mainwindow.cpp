@@ -9,7 +9,6 @@
 #include <QUrl>
 #include <QMessageBox>
 #include <QInputDialog>
-#include "miniz/miniz.h"
 #include <filesystem>
 #include <fstream>
 #include <QDebug>
@@ -18,7 +17,7 @@
 #include <QTimer>
 
 
-namespace fs = std::filesystem;
+
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -42,6 +41,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_installbutton_clicked()
 {
+    std::cout << "Is this even being called?" << std::endl;
         QString hudtxt = readHudTxt();
         if(hudtxt.isNull()){
             QString installPath = installHud();
@@ -154,53 +154,6 @@ QString MainWindow::installHud()
 
 bool MainWindow::extractHud(const QString &zipFilePath)
 {
-    fs::path zipPath(zipFilePath.toStdString());
-    std::string outputDirectory = zipPath.parent_path().string();
-
-    // Read the ZIP file into memory
-    std::ifstream zipFile(zipFilePath.toStdString(), std::ios::binary);
-    if (!zipFile.is_open()) {
-        std::cerr << "Error: ZIP file does not exist. Path: " << zipFilePath.toStdString() << std::endl;
-        return false;
-    }
-
-    zipFile.seekg(0, std::ios::end);
-    std::streampos zipFileSize = zipFile.tellg();
-    zipFile.seekg(0, std::ios::beg);
-    std::vector<char> zipData(zipFileSize);
-    zipFile.read(zipData.data(), zipFileSize);
-
-    // Initialize the miniz ZIP archive
-    mz_zip_archive zipArchive;
-    memset(&zipArchive, 0, sizeof(zipArchive));
-    if (!mz_zip_reader_init_mem(&zipArchive, zipData.data(), static_cast<size_t>(zipFileSize), 0)) {
-        std::cerr << "Error: Unable to initialize ZIP archive." << std::endl;
-        return false;
-    }
-
-    // Get the number of files in the ZIP archive
-    size_t numFiles = mz_zip_reader_get_num_files(&zipArchive);
-
-    // Iterate through each file in the ZIP archive
-    for (size_t i = 0; i < numFiles; ++i) {
-        mz_zip_archive_file_stat file_stat;
-        if (!mz_zip_reader_file_stat(&zipArchive, i, &file_stat)) {
-            std::cerr << "Error: Unable to get file information for file " << i << std::endl;
-            continue;
-        }
-
-        // Extract each file to the output directory, preserving the directory structure
-        fs::path outputPath = zipPath.parent_path() / fs::path(file_stat.m_filename);
-        if (!mz_zip_reader_extract_to_file(&zipArchive, i, outputPath.string().c_str(), 0)) {
-            std::cerr << "Error: Unable to extract file " << file_stat.m_filename << std::endl;
-            continue;
-        }
-    }
-
-    // Clean up
-    mz_zip_reader_end(&zipArchive);
-
-    return true;
 }
 
 
