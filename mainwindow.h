@@ -85,7 +85,7 @@ public:
      * @param installPath
      * @return
      */
-    bool extractHud(const QString &zipFilePath, const QString& extractPath) ;
+    bool extractHud(const QString &zipFilePath) ;
 private slots:
 
     void on_button7Hud_clicked();
@@ -105,7 +105,5 @@ private:
     hud *currentHud;
     QString currentPath;
 
-signals:
-    void installationComplete(const QString& zipFilePath, const QString& installPath);
 };
 #endif // MAINWINDOW_H

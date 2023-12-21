@@ -15,6 +15,7 @@
 #include <QDebug>
 #include <QFileDialog>
 
+
 namespace fs = std::filesystem;
 
 MainWindow::MainWindow(QWidget *parent)
@@ -27,8 +28,9 @@ MainWindow::MainWindow(QWidget *parent)
     this->setFixedHeight(600);
     QMenuBar *q = this->menuBar();
     q->setStyleSheet("color: white");
-    connect(this, &MainWindow::installationComplete, this);
 }
+
+
 MainWindow::~MainWindow()
 {
     delete currentHud;
@@ -66,97 +68,36 @@ void MainWindow::on_installbutton_clicked()
         }
     }
 
-void MainWindow::installationComplete(const QString& zipFilePath, const QString& installPath)
-{
-    extractHud(zipFilePath, installPath);
-}
 
 bool MainWindow::installFunction ()
 {
-    // Use QFileDialog to get the installation path
-    QString installPath = QFileDialog::getExistingDirectory(this, tr("Select Installation Directory"), QDir::currentPath());
 
-    // Check if the user canceled the dialog
-    if (installPath.isNull()) {
-        qDebug() << "Installation canceled by user.";
-        return false;
-    }
-
-    QString zipFilePath = QDir(installPath).filePath("downloaded_file.zip");
-
-    // Download the file and connect the finished signal
-    QNetworkAccessManager* manager = new QNetworkAccessManager(this);
-    QNetworkRequest request;
-    request.setUrl(QUrl(currentHud->getDownloadLink()));
-    QNetworkReply* reply = manager->get(request);
-
-    connect(reply, &QNetworkReply::finished, [=]() {
-        if (reply->error() == QNetworkReply::NoError) {
-            QByteArray data = reply->readAll();
-
-            // Save the downloaded file to the installation path
-            QFile file(zipFilePath);
-
-            if (file.open(QIODevice::WriteOnly)) {
-                qint64 bytesWritten = file.write(data);
-                file.close();
-
-                if (bytesWritten == data.size()) {
-                    qDebug() << "File downloaded successfully to: " << zipFilePath;
-
-                    // Signal that installation is complete and pass the paths
-                    emit installationComplete(zipFilePath, installPath);
-                } else {
-                    qDebug() << "Error writing to file. Bytes written: " << bytesWritten;
-                    QFile::remove(zipFilePath);
-                }
-            } else {
-                qDebug() << "Could not open file for writing. Error: " << file.errorString();
-            }
-        } else {
-            qDebug() << "Download failed: " << reply->errorString();
-        }
-
-        // Clean up resources
-        reply->deleteLater();
-        manager->deleteLater();
-    });
-
-    return true;
 }
 
 
-bool MainWindow::extractHud(const QString &zipFilePath, const QString& extractPath)
+bool MainWindow::extractHud(const QString &zipFilePath)
 {
-    QFile zipFile(zipFilePath);
-
-    if (!zipFile.exists()) {
-        qDebug() << "Error: ZIP file does not exist. Path: " << zipFilePath;
-        return false;
-    }
-
-    std::ifstream zipStream(zipFilePath.toStdString(), std::ios::binary);
-    QFile::Permissions permissions = zipFile.permissions();
-    qDebug() << "File Permissions: " << permissions;
-
-    if (!zipStream.is_open()) {
-        qDebug() << "Error: ZIP file does not exist. Path: " << zipFilePath;
-        return false;
-    }
+    fs::path zipPath(zipFilePath.toStdString());
+    std::string outputDirectory = zipPath.parent_path().string();
 
     // Read the ZIP file into memory
-    zipStream.seekg(0, std::ios::end);
-    std::streampos zipFileSize = zipStream.tellg();
-    zipStream.seekg(0, std::ios::beg);
+    std::ifstream zipFile(zipFilePath.toStdString(), std::ios::binary);
+    if (!zipFile.is_open()) {
+        std::cerr << "Error: ZIP file does not exist. Path: " << zipFilePath.toStdString() << std::endl;
+        return false;
+    }
+
+    zipFile.seekg(0, std::ios::end);
+    std::streampos zipFileSize = zipFile.tellg();
+    zipFile.seekg(0, std::ios::beg);
     std::vector<char> zipData(zipFileSize);
-    zipStream.read(zipData.data(), zipFileSize);
+    zipFile.read(zipData.data(), zipFileSize);
 
     // Initialize the miniz ZIP archive
     mz_zip_archive zipArchive;
     memset(&zipArchive, 0, sizeof(zipArchive));
-
     if (!mz_zip_reader_init_mem(&zipArchive, zipData.data(), static_cast<size_t>(zipFileSize), 0)) {
-        qDebug() << "Error: Unable to initialize ZIP archive.";
+        std::cerr << "Error: Unable to initialize ZIP archive." << std::endl;
         return false;
     }
 
@@ -165,18 +106,16 @@ bool MainWindow::extractHud(const QString &zipFilePath, const QString& extractPa
 
     // Iterate through each file in the ZIP archive
     for (size_t i = 0; i < numFiles; ++i) {
-        mz_zip_archive_file_stat fileStat;
-
-        if (!mz_zip_reader_file_stat(&zipArchive, i, &fileStat)) {
-            qDebug() << "Error: Unable to get file information for file " << i;
+        mz_zip_archive_file_stat file_stat;
+        if (!mz_zip_reader_file_stat(&zipArchive, i, &file_stat)) {
+            std::cerr << "Error: Unable to get file information for file " << i << std::endl;
             continue;
         }
 
         // Extract each file to the output directory, preserving the directory structure
-        fs::path outputPath = fs::path(extractPath.toStdString()) / fs::path(fileStat.m_filename);
-
+        fs::path outputPath = zipPath.parent_path() / fs::path(file_stat.m_filename);
         if (!mz_zip_reader_extract_to_file(&zipArchive, i, outputPath.string().c_str(), 0)) {
-            qDebug() << "Error: Unable to extract file " << fileStat.m_filename;
+            std::cerr << "Error: Unable to extract file " << file_stat.m_filename << std::endl;
             continue;
         }
     }
@@ -184,14 +123,9 @@ bool MainWindow::extractHud(const QString &zipFilePath, const QString& extractPa
     // Clean up
     mz_zip_reader_end(&zipArchive);
 
-    // Delete the original ZIP file
-    if (std::remove(zipFilePath.toStdString().c_str()) != 0) {
-        qDebug() << "Error: Unable to delete the original ZIP file.";
-        return false;
-    }
-
     return true;
 }
+
 
 
 bool MainWindow::uninstallHud(QString hudtxt)
@@ -323,9 +257,6 @@ std::vector<QString> MainWindow::createImagesVector(QString fileName)
 }
 
 
-
-
-
 void MainWindow::setHud(QString name, QString description, QString creator, QString downloadlink, QString hudFileName){
     if (currentHud)
     {
@@ -409,7 +340,14 @@ void MainWindow::on_rightImageButton_clicked()
     std::vector<QString> paths = currentHud->getImages();
     int index = currentHud->getImageNumber();
     qDebug() << "Right Image Button Clicked!";
+    if(currentHud == nullptr)
+    {
 
+    }
+    else
+    {
+
+    }
     if (index < paths.size() - 1)
     {
         index++;
@@ -445,7 +383,6 @@ void MainWindow::on_actionOptions_triggered()
     {
         currentPath = getTf2Path.textValue();
         writePathTxt();
-
     }
 }
 
