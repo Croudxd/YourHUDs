@@ -99,9 +99,6 @@ private slots:
     void on_leftImageButton_clicked();
 
     void on_rightImageButton_clicked();
-
-    void on_actionOptions_triggered();
-
 private:
     Ui::MainWindow *ui;
 

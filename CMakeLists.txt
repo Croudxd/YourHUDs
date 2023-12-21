@@ -36,7 +36,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
 else()
     if(ANDROID)
         add_library(YourHUDs SHARED
-            ${PROJECT_SOURCES}
+            ${PRgOJECT_SOURCES}
         )
     else()
         add_executable(YourHUDs

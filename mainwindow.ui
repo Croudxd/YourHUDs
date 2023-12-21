@@ -478,26 +478,10 @@ color: rgb(240, 235, 229);</string>
     <property name="title">
      <string>Settings</string>
     </property>
-    <addaction name="actionOptions"/>
    </widget>
    <addaction name="menuSettings"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
-  <action name="actionOptions">
-   <property name="text">
-    <string>Options</string>
-   </property>
-   <property name="visible">
-    <bool>true</bool>
-   </property>
-   <property name="colour" stdset="0">
-    <color>
-     <red>255</red>
-     <green>255</green>
-     <blue>255</blue>
-    </color>
-   </property>
-  </action>
  </widget>
  <resources/>
  <connections/>
