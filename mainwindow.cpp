@@ -43,7 +43,6 @@ void MainWindow::on_installbutton_clicked()
             if(!installPath.isNull()){
                 if(writeHudTxt())
                 {
-                    QTimer::singleShot(10000, this, [&]() {
                         try
                             {
                             extractHud(installPath);
@@ -52,7 +51,6 @@ void MainWindow::on_installbutton_clicked()
                     {
                             qDebug() << "Exception during extraction: " << e.what();
                         }
-                    });
                 }
 
             }
@@ -72,7 +70,6 @@ void MainWindow::on_installbutton_clicked()
                     {
                         if(writeHudTxt())
                         {
-                            QTimer::singleShot(5000, this, [&]() {
                                 try
                                 {
                                     extractHud(installPath);
@@ -81,7 +78,6 @@ void MainWindow::on_installbutton_clicked()
                                 {
                                     qDebug() << "Exception during extraction: " << e.what();
                                 }
-                            });
                         }
 
                     }
@@ -106,13 +102,16 @@ QString MainWindow::installHud()
     }
 
     // Get the file path to save
-    QString zipFilePath = QFileDialog::getSaveFileName(this, "Save File", QDir::homePath() + "/downloaded_file.zip", "ZIP Files (*.zip)");
+    QString downloadDir = QFileDialog::getExistingDirectory(this, "Select Download Directory", QDir::homePath());
 
     // Check if the user canceled the dialog
-    if (zipFilePath.isEmpty()) {
+    if (downloadDir.isEmpty()) {
         qDebug() << "Installation canceled by the user.";
         return QString();
     }
+
+    QString zipFilePath = QDir(downloadDir).filePath("downloaded_file.zip");
+
 
     // Create a network manager to handle the download
     QNetworkAccessManager manager;
@@ -137,7 +136,9 @@ QString MainWindow::installHud()
         zipFile.write(reply->readAll());
         zipFile.close();
         qDebug() << "Installation successful!";
-        return zipFilePath;
+        QString absoluteZipFilePath = QFileInfo(zipFile).absoluteFilePath();
+
+        return absoluteZipFilePath;
     } else {
         qDebug() << "Error saving file to disk.";
         return QString();
@@ -145,56 +146,42 @@ QString MainWindow::installHud()
 
     // Clean up the network reply
     reply->deleteLater();
+
 }
 
 
 bool MainWindow::extractHud(const QString &zipFilePath)
 {
-    try {
-        QString zipPath = zipFilePath;
-        QStringList param;
-        param << "unzip.py" << zipPath;  // Adjust the order of parameters
 
-        QPointer<QProcess> q = new QProcess;
-        q->setProgram("python");  // Set the program to "python"
-        q->setArguments(param);
-        q->setProcessChannelMode(QProcess::MergedChannels);
-        connect(q, &QProcess::readyReadStandardOutput, [=] {
-            qDebug() << "Python Output:" << q->readAllStandardOutput();
-        });
+    QString zipPath = zipFilePath;
+    QStringList param;
+    param << "unzip.py" << zipPath;  // Adjust the order of parameters
 
-        q->start();
-        if (!q->waitForStarted()) {
-            qDebug() << "Failed to start QProcess:" << q->errorString();
-            delete q;  // Cleanup if process failed to start
-            return false;
-        }
-        QTimer::singleShot(1000, this, [=]() {
-            if (!q->waitForFinished(-1)) {
-                qDebug() << "Error while waiting for QProcess to finish:" << q->errorString();
-            }
-        });
-
-        if (q->exitCode() != 0) {
-            qDebug() << "Extraction failed. exit code:" << q->exitCode();
-            qDebug() << "Error:" << q->errorString();
-            delete q;  // Cleanup if extraction failed
-            return false;
+    QPointer<QProcess> q = new QProcess;
+    q->setProgram("python");  // Set the program to "python"
+    q->setArguments(param);
+    q->setProcessChannelMode(QProcess::MergedChannels);
+    q->start();
+    if(q->waitForFinished(-1)){
+        qDebug() << "Process finished success";
+        // Read and display standard output
+        qDebug() << "Output: " << q->readAllStandardOutput();
+        if (QFile::remove(zipFilePath)) {
+            qDebug() << "Original ZIP file deleted successfully.";
+        } else {
+            qDebug() << "Error deleting the original ZIP file.";
         }
 
-        delete q;  // Cleanup after successful extraction
         return true;
-    } catch (const std::bad_alloc& e) {
-        qDebug() << "Extraction ERROR: Bad allocation caught:" << e.what();
-    } catch (const std::exception& e) {
-        qDebug() << "Extraction ERROR: Standard exception caught:" << e.what();
-    } catch (...) {
-        qDebug() << "Extraction ERROR: Unknown exception caught.";
     }
+    else
+    {
+        qDebug() << "Error occured waiting for process to finish";
+    }
+
 
     return false;
 }
-
 bool MainWindow::uninstallHud(QString hudtxt)
 {
     QDir hudDir(hudtxt);
