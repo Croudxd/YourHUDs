@@ -61,7 +61,7 @@ public:
      * track of whether or not a hud is installed into custom.
      * @brief writeHudTxt
      */
-    bool writeHudTxt();
+    bool writeHudTxt(QString installPath);
     /**
      * This function writes the currentPath QString variable to a txt file, so when user's close the application it will save the locaiton of the custom folder in path.txt.
      * @brief writePathTxt

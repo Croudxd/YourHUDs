@@ -40,19 +40,9 @@ void MainWindow::on_installbutton_clicked()
         QString hudtxt = readHudTxt();
         if(hudtxt.isNull()){
             QString installPath = installHud();
-            if(!installPath.isNull()){
-                if(writeHudTxt())
-                {
-                        try
-                            {
-                            extractHud(installPath);
-
-                } catch (const std::exception& e)
-                    {
-                            qDebug() << "Exception during extraction: " << e.what();
-                        }
-                }
-
+            if(!installPath.isNull())
+            {
+                extractHud(installPath);
             }
             else
             {
@@ -68,18 +58,8 @@ void MainWindow::on_installbutton_clicked()
                     QString installPath = installHud();
                     if(!installPath.isNull())
                     {
-                        if(writeHudTxt())
-                        {
-                                try
-                                {
-                                    extractHud(installPath);
-
-                                } catch (const std::exception& e)
-                                {
-                                    qDebug() << "Exception during extraction: " << e.what();
-                                }
+                        extractHud(installPath);
                         }
-
                     }
                     else
                     {
@@ -88,7 +68,7 @@ void MainWindow::on_installbutton_clicked()
                 }
             }
         }
-    }
+
 
 
 
@@ -137,7 +117,12 @@ QString MainWindow::installHud()
         zipFile.close();
         qDebug() << "Installation successful!";
         QString absoluteZipFilePath = QFileInfo(zipFile).absoluteFilePath();
-
+        QString installedHudPath = QDir(downloadDir).filePath(currentHud->getHudFileName());
+        if (writeHudTxt(installedHudPath)) {
+            qDebug() << "HUD path written to hud.txt successfully.";
+        } else {
+            qDebug() << "Error writing HUD path to hud.txt.";
+        }
         return absoluteZipFilePath;
     } else {
         qDebug() << "Error saving file to disk.";
@@ -188,7 +173,7 @@ bool MainWindow::uninstallHud(QString hudtxt)
     if (hudDir.exists())
     {
         hudDir.removeRecursively();
-        if (!hudDir.exists())
+        if (hudDir.exists())
         {
             QMessageBox::critical(this, "Uninstall Error", "Failed to uninstall HUD. Please ensure the directory is not in use.");
             return false;
@@ -257,7 +242,7 @@ QString MainWindow::readPathTxt()
     }
 }
 
-bool MainWindow::writeHudTxt()
+bool MainWindow::writeHudTxt(QString installPath)
 {
     QString filePath = "hud.txt";
     QFile pathFile(filePath);
@@ -265,9 +250,7 @@ bool MainWindow::writeHudTxt()
     if (currentHud && pathFile.open(QIODevice::WriteOnly | QIODevice::Text))
     {
         QTextStream out(&pathFile);
-        out << currentPath;
-        out << "\\";
-        out << currentHud->getHudFileName();
+        out << installPath;
         pathFile.close();
         return true;
     }
