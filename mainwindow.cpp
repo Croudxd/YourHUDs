@@ -485,6 +485,8 @@ void MainWindow::on_oneHUD_clicked()
     setImages(ui->label_2, imgPaths[0]);
     currentHud->setImages(imgPaths);
 }
+
+//EDIT THESE BUTTON FUNCTIONS BELOW TO ADD CUSTOM HUD BUTTONS.
 void MainWindow::on_buttonHUD_clicked()
 {
     // setHud("OneHUD", "OneHUD Custom hud", "creator", "https://github.com/leadscales/onehud/archive/refs/tags/v0.9.2.zip", "onehud-0.9.2");
