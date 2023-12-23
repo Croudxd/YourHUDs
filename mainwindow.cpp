@@ -415,14 +415,14 @@ void MainWindow::on_buttonpeachHUD_clicked()
     setImages(ui->label_2, imgPaths[0]);
     currentHud->setImages(imgPaths);
 }
-// void MainWindow::on_buttonzeHUD_clicked()
-// {
-//     setHud("zeHUD", "zeHUD Custom hud", "bo0bsy", "");
-// }
-// void MainWindow::on_oneHUD_clicked()
-// {
-
-// }
+void MainWindow::on_buttonzeHUD_clicked()
+{
+    //setHud("zeHUD", "zeHUD Custom hud", "bo0bsy", "");
+}
+void MainWindow::on_oneHUD_clicked()
+{
+    //setHud("OneHUD", "OneHUD Custom hud", "creator", );
+}
 
 //Wifi is so slow i cant get links lol.
 

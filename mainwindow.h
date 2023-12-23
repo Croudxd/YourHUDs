@@ -101,6 +101,10 @@ private slots:
     void on_rightImageButton_clicked();
     void on_buttonpeachHUD_clicked();
 
+    void on_buttonzeHUD_clicked();
+
+    void on_oneHUD_clicked();
+
 private:
     Ui::MainWindow *ui;
 
