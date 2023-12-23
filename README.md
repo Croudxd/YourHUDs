@@ -18,7 +18,7 @@ For anyone wanting to customize the source code and add own HUD's/buttons. Its a
  - Add a progress bar for installation.
  - Adding more HUDs.
 
-**How to install:
+**How to install:**
 - Go to releases, install latest release.
 - Once installed unzip into any directory.
 - Open the exe, but make sure not to move the exe out of the zip file, this will mess up the program.
@@ -28,5 +28,5 @@ For anyone wanting to customize the source code and add own HUD's/buttons. Its a
 
 Please make sure to report any issues to me either here or my discord @croudxd.
 
-**Images of program:
+**Images of program:**
 
