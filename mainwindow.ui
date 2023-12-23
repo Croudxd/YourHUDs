@@ -168,7 +168,7 @@ color: rgb(240, 235, 229);</string>
      <property name="geometry">
       <rect>
        <x>0</x>
-       <y>0</y>
+       <y>-300</y>
        <width>300</width>
        <height>1000</height>
       </rect>
@@ -429,7 +429,7 @@ background-color: rgb(179, 179, 179);</string>
         </widget>
        </item>
        <item>
-        <widget class="QPushButton" name="buttonHUD2_3">
+        <widget class="QPushButton" name="buttonHUD3">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
            <horstretch>0</horstretch>
@@ -464,7 +464,7 @@ background-color: rgb(179, 179, 179);</string>
         </widget>
        </item>
        <item>
-        <widget class="QPushButton" name="buttonHUD2_2">
+        <widget class="QPushButton" name="buttonHUD4">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
            <horstretch>0</horstretch>
@@ -499,7 +499,7 @@ background-color: rgb(179, 179, 179);</string>
         </widget>
        </item>
        <item>
-        <widget class="QPushButton" name="buttonHUD_2">
+        <widget class="QPushButton" name="buttonHUD5">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
            <horstretch>0</horstretch>
@@ -534,7 +534,7 @@ background-color: rgb(179, 179, 179);</string>
         </widget>
        </item>
        <item>
-        <widget class="QPushButton" name="buttonHUD_3">
+        <widget class="QPushButton" name="buttonHUD6">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
            <horstretch>0</horstretch>

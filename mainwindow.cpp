@@ -81,6 +81,54 @@ QString MainWindow::installHud()
         return QString();
     }
 
+    QString pathtxt = readPathTxt();
+    if(!pathtxt.isEmpty())
+    {
+
+        QString zipFilePath = QDir(pathtxt).filePath("downloaded_file.zip");
+
+
+        // Create a network manager to handle the download
+        QNetworkAccessManager manager;
+        QNetworkRequest request(currentHud->getDownloadLink());
+        QNetworkReply* reply = manager.get(request);
+
+        // Wait for the download to finish
+        QEventLoop loop;
+        QObject::connect(reply, &QNetworkReply::finished, &loop, &QEventLoop::quit);
+        loop.exec();
+
+        // Check if the download was successful
+        if (reply->error() != QNetworkReply::NoError) {
+            qDebug() << "Error downloading file: " << reply->errorString();
+            reply->deleteLater();
+            return QString();
+        }
+
+        // Save the downloaded data to the selected file
+        QFile zipFile(zipFilePath);
+        if (zipFile.open(QIODevice::WriteOnly)) {
+            zipFile.write(reply->readAll());
+            zipFile.close();
+            qDebug() << "Installation successful!";
+            QString absoluteZipFilePath = QFileInfo(zipFile).absoluteFilePath();
+            QString installedHudPath = QDir(pathtxt).filePath(currentHud->getHudFileName());
+            if (writeHudTxt(installedHudPath)) {
+                qDebug() << "HUD path written to hud.txt successfully.";
+            } else {
+                qDebug() << "Error writing HUD path to hud.txt.";
+            }
+            return absoluteZipFilePath;
+        } else {
+            qDebug() << "Error saving file to disk.";
+            return QString();
+        }
+
+        // Clean up the network reply
+        reply->deleteLater();
+    }
+    else
+    {
     // Get the file path to save
     QString downloadDir = QFileDialog::getExistingDirectory(this, "Select Download Directory", QDir::homePath());
 
@@ -123,7 +171,13 @@ QString MainWindow::installHud()
         } else {
             qDebug() << "Error writing HUD path to hud.txt.";
         }
-        return absoluteZipFilePath;
+        if(writePathTxt(downloadDir)){
+            return absoluteZipFilePath;
+        }
+        else
+        {
+            qDebug() << "Failed to write to pathtxt";
+        }
     } else {
         qDebug() << "Error saving file to disk.";
         return QString();
@@ -131,7 +185,7 @@ QString MainWindow::installHud()
 
     // Clean up the network reply
     reply->deleteLater();
-
+    }
 }
 
 
@@ -261,7 +315,7 @@ bool MainWindow::writeHudTxt(QString installPath)
     }
 }
 
-void MainWindow::writePathTxt()
+bool MainWindow::writePathTxt(QString &installPath)
 {
 
     QString filePath = "path.txt";
@@ -269,12 +323,14 @@ void MainWindow::writePathTxt()
     if (pathFile.open(QIODevice::WriteOnly | QIODevice::Text))
     {
         QTextStream out(&pathFile);
-        out << currentPath;
+        out << installPath;
         pathFile.close();
+        return true;
     }
     else
     {
         qDebug() << "Write Path Error: Could not update TF2 path in file.";
+        return false;
     }
 }
 
@@ -417,12 +473,58 @@ void MainWindow::on_buttonpeachHUD_clicked()
 }
 void MainWindow::on_buttonzeHUD_clicked()
 {
-    //setHud("zeHUD", "zeHUD Custom hud", "bo0bsy", "");
+    setHud("zeHUD", "zeHUD Custom hud", "bo0bsy", "https://github.com/bo0bsy/zehud/archive/refs/tags/v1.0.zip", "zehud-1.0");
+    std::vector<QString> imgPaths = createImagesVector("zeHUD");
+    setImages(ui->label_2, imgPaths[0]);
+    currentHud->setImages(imgPaths);
 }
 void MainWindow::on_oneHUD_clicked()
 {
-    //setHud("OneHUD", "OneHUD Custom hud", "creator", );
+    setHud("OneHUD", "OneHUD Custom hud", "creator", "https://github.com/leadscales/onehud/archive/refs/tags/v0.9.2.zip", "onehud-0.9.2");
+    std::vector<QString> imgPaths = createImagesVector("oneHUD");
+    setImages(ui->label_2, imgPaths[0]);
+    currentHud->setImages(imgPaths);
 }
-
-//Wifi is so slow i cant get links lol.
+void MainWindow::on_buttonHUD_clicked()
+{
+    // setHud("OneHUD", "OneHUD Custom hud", "creator", "https://github.com/leadscales/onehud/archive/refs/tags/v0.9.2.zip", "onehud-0.9.2");
+    // std::vector<QString> imgPaths = createImagesVector("oneHUD");
+    // setImages(ui->label_2, imgPaths[0]);
+    // currentHud->setImages(imgPaths);
+}
+void MainWindow::on_buttonHUD2_clicked()
+{
+    // setHud("OneHUD", "OneHUD Custom hud", "creator", "https://github.com/leadscales/onehud/archive/refs/tags/v0.9.2.zip", "onehud-0.9.2");
+    // std::vector<QString> imgPaths = createImagesVector("oneHUD");
+    // setImages(ui->label_2, imgPaths[0]);
+    // currentHud->setImages(imgPaths);
+}
+void MainWindow::on_buttonHUD3_clicked()
+{
+    // setHud("OneHUD", "OneHUD Custom hud", "creator", "https://github.com/leadscales/onehud/archive/refs/tags/v0.9.2.zip", "onehud-0.9.2");
+    // std::vector<QString> imgPaths = createImagesVector("oneHUD");
+    // setImages(ui->label_2, imgPaths[0]);
+    // currentHud->setImages(imgPaths);
+}
+void MainWindow::on_buttonHUD4_clicked()
+{
+    // setHud("OneHUD", "OneHUD Custom hud", "creator", "https://github.com/leadscales/onehud/archive/refs/tags/v0.9.2.zip", "onehud-0.9.2");
+    // std::vector<QString> imgPaths = createImagesVector("oneHUD");
+    // setImages(ui->label_2, imgPaths[0]);
+    // currentHud->setImages(imgPaths);
+}
+void MainWindow::on_buttonHUD5_clicked()
+{
+    // setHud("OneHUD", "OneHUD Custom hud", "creator", "https://github.com/leadscales/onehud/archive/refs/tags/v0.9.2.zip", "onehud-0.9.2");
+    // std::vector<QString> imgPaths = createImagesVector("oneHUD");
+    // setImages(ui->label_2, imgPaths[0]);
+    // currentHud->setImages(imgPaths);
+}
+void MainWindow::on_buttonHUD6_clicked()
+{
+    // setHud("OneHUD", "OneHUD Custom hud", "creator", "https://github.com/leadscales/onehud/archive/refs/tags/v0.9.2.zip", "onehud-0.9.2");
+    // std::vector<QString> imgPaths = createImagesVector("oneHUD");
+    // setImages(ui->label_2, imgPaths[0]);
+    // currentHud->setImages(imgPaths);
+}
 

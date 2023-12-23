@@ -66,7 +66,7 @@ public:
      * This function writes the currentPath QString variable to a txt file, so when user's close the application it will save the locaiton of the custom folder in path.txt.
      * @brief writePathTxt
      */
-    void writePathTxt();
+    bool writePathTxt(QString &installPath);
     /**
      * Will attempt to read path.txt, if it fails returns empty QString, it will not create a new path.txt.
      * @brief readPathTxt
@@ -104,6 +104,18 @@ private slots:
     void on_buttonzeHUD_clicked();
 
     void on_oneHUD_clicked();
+
+    void on_buttonHUD_clicked();
+
+    void on_buttonHUD2_clicked();
+
+    void on_buttonHUD3_clicked();
+
+    void on_buttonHUD4_clicked();
+
+    void on_buttonHUD5_clicked();
+
+    void on_buttonHUD6_clicked();
 
 private:
     Ui::MainWindow *ui;
