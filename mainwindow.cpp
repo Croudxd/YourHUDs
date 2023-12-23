@@ -326,24 +326,6 @@ void MainWindow::setImages(QLabel *label, const QString imgPath)
     qDebug() << "Image Path:" << imgPath;
 
 }
-
-
-
-void MainWindow::on_button7Hud_clicked()
-{
-    setHud("FlawHUD", "FlawHUD Custom hud", "CriticalFlaw", "https://github.com/CriticalFlaw/flawhud/releases/download/2023.1013/flawhud.zip", "flawhud");
-    std::vector<QString> imgPaths = createImagesVector("FlawHUD");
-    setImages(ui->label_2, imgPaths[0]);
-    currentHud->setImages(imgPaths);
-}
-void MainWindow::on_buttonBudHUD_clicked()
-{
-    setHud("BudHUD", "BudHUD Custom HUD", "rbJaxter", "https://github.com/rbjaxter/budhud/releases/download/2312_01/budhud-master.zip", "budhud-master");
-    std::vector<QString> imgPaths = createImagesVector("BudHUD");
-    setImages(ui->label_2, imgPaths[0]);
-    currentHud->setImages(imgPaths);
-}
-
 void MainWindow::on_leftImageButton_clicked()
 {
     std::vector<QString> paths = currentHud->getImages();
@@ -410,4 +392,37 @@ void MainWindow::on_rightImageButton_clicked()
 }
 
 
+
+//ALL HUD BUTTONS
+void MainWindow::on_button7Hud_clicked()
+{
+    setHud("FlawHUD", "FlawHUD Custom hud", "CriticalFlaw", "https://github.com/CriticalFlaw/flawhud/releases/download/2023.1013/flawhud.zip", "flawhud");
+    std::vector<QString> imgPaths = createImagesVector("FlawHUD");
+    setImages(ui->label_2, imgPaths[0]);
+    currentHud->setImages(imgPaths);
+}
+void MainWindow::on_buttonBudHUD_clicked()
+{
+    setHud("BudHUD", "BudHUD Custom HUD", "rbJaxter", "https://github.com/rbjaxter/budhud/releases/download/2312_01/budhud-master.zip", "budhud-master");
+    std::vector<QString> imgPaths = createImagesVector("BudHUD");
+    setImages(ui->label_2, imgPaths[0]);
+    currentHud->setImages(imgPaths);
+}
+void MainWindow::on_buttonpeachHUD_clicked()
+{
+    setHud("PeachHUD", "PeachHUD Custom hud", "Peach", "https://github.com/PapaPeach/PeachHUD/archive/refs/tags/v3.3.2.zip", "PeachHUD-3.3.2");
+    std::vector<QString> imgPaths = createImagesVector("PeachHUD");
+    setImages(ui->label_2, imgPaths[0]);
+    currentHud->setImages(imgPaths);
+}
+// void MainWindow::on_buttonzeHUD_clicked()
+// {
+//     setHud("zeHUD", "zeHUD Custom hud", "bo0bsy", "");
+// }
+// void MainWindow::on_oneHUD_clicked()
+// {
+
+// }
+
+//Wifi is so slow i cant get links lol.
 

@@ -8,6 +8,10 @@
         <file>imgs/BudHUD/image2.jpg</file>
         <file>imgs/BudHUD/image3.jpg</file>
         <file>imgs/BudHUD/image4.jpg</file>
+        <file>imgs/PeachHUD/image1.jpg</file>
+        <file>imgs/PeachHUD/image2.jpg</file>
+        <file>imgs/PeachHUD/image3.jpg</file>
+        <file>imgs/PeachHUD/image4.jpg</file>
     </qresource>
     <qresource prefix="/logo">
         <file>logo.png</file>
