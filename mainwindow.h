@@ -86,7 +86,48 @@ public:
      * @param installPath
      * @return
      */
-    bool extractHud(const QString &zipFilePath) ;
+    bool extractHud(const QString &zipFilePath);
+
+    //CUSTOM HUD FUNCTIONS.
+    /**
+     * To call other functions, such as addbutton, copyHud etc when plus button clicked.
+     * @brief plus
+     */
+    void plus();
+    /**
+     * Function get name of HUD, and then create button and assign name.
+     * @brief addButton
+     * @return
+     */
+    bool addButton();
+
+    /**
+     *When clicked will change a variable to false, if any buttons are clicked with delete bool on will get deleted.
+     * @brief removeButton
+     * @return
+     */
+    bool removeButton();
+
+    /**
+     * Will take two paths, and copy hud from one path to the second path/param.
+     * @brief copyHud
+     * @return
+     */
+    bool copyHud();
+
+    /**
+     * Returns all of customhud to a string to be put into file.
+     * @brief toFile
+     * @return
+     */
+    bool toFile();
+
+    /**
+     * Will read the HudFile.txt and generate the associated customhud objects, setting name and path.
+     * @brief readHudFile
+     * @return
+     */
+    QString readHudFile();
 
 private slots:
 

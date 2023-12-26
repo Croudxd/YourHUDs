@@ -530,3 +530,39 @@ void MainWindow::on_buttonHUD6_clicked()
     // currentHud->setImages(imgPaths);
 }
 
+//CUSTOM HUD FUNCTIONS
+//CUSTOM HUD FUNCTIONS
+//CUSTOM HUD FUNCTIONS
+//CUSTOM HUD FUNCTIONS
+//CUSTOM HUD FUNCTIONS
+
+void plus()
+{
+
+}
+
+bool addButton()
+{
+
+}
+
+bool removeButton()
+{
+
+}
+
+bool copyHud()
+{
+
+}
+
+bool toFile()
+{
+
+}
+
+QString readHudFile()
+{
+
+}
+
