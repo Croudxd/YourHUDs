@@ -593,7 +593,7 @@ background-color: rgb(179, 179, 179);</string>
      <layout class="QGridLayout" name="gridLayout"/>
     </widget>
    </widget>
-   <widget class="QPushButton" name="pushButton">
+   <widget class="QPushButton" name="addButton">
     <property name="geometry">
      <rect>
       <x>180</x>
@@ -606,7 +606,7 @@ background-color: rgb(179, 179, 179);</string>
      <string>add</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="pushButton_2">
+   <widget class="QPushButton" name="removeButton">
     <property name="geometry">
      <rect>
       <x>180</x>

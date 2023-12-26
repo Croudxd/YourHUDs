@@ -538,7 +538,7 @@ void MainWindow::on_buttonHUD6_clicked()
 
 void MainWindow::plus()
 {
-    //calls all functions below that need to be used within the add button.
+    //calls all functions belowg that need to be used within the add button.
 }
 
 bool MainWindow::addButton()
