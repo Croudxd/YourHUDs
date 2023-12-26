@@ -9,6 +9,11 @@ User's can add their own huds to install.
  - When user clicks on install. It will copy the file from location in storage to custom folder.
  - and then do the writeHudTxt function(also using readHuxTxt and deleting). Making sure to copy and not to move the HUD folder's so they can be reused.
  - Where to add? Perhaps at the bottom add like 6 buttons which can be modified to save huds, and  have the normal design to show case new huds.
+
+
+
+
+
 In conclusion:
 	New class - customhud:
 	- name QString, path QString.
@@ -16,6 +21,7 @@ In conclusion:
 	- destructor
 	- 
 - Function to add:
+
 - plus(layout/anything else needed to create button).
 - addbutton() function to dynamically add a button or smth.
 - removebutton() // will call destructor on the hud/button to delete or smth like this.

@@ -536,33 +536,58 @@ void MainWindow::on_buttonHUD6_clicked()
 //CUSTOM HUD FUNCTIONS
 //CUSTOM HUD FUNCTIONS
 
-void plus()
+void MainWindow::plus()
 {
-
+    //calls all functions below that need to be used within the add button.
 }
 
-bool addButton()
+bool MainWindow::addButton()
 {
-
+    //create button in grid layout,
+    //create new customhud object.
+    //get dialog of path to custom hud.
+    //set using set path.
+    //get the name by use of dialog/messagbox.
+    //set the name of customhud object.
 }
 
-bool removeButton()
+bool MainWindow::removeButton()
 {
-
+    REMOVE=true;
+    //Set's remove to true
+    //another click will set it too false.
 }
 
-bool copyHud()
+bool MainWindow::copyHud()
 {
-
+    //get the path of hud,
+    //get path of custom folder.
+    //copy hud files to custom folder.
 }
 
-bool toFile()
+bool MainWindow::toFile()
 {
-
+    //get name and path, save this to a file.
 }
 
-QString readHudFile()
+QString MainWindow::readHudFile()
 {
+    //read a txt file, each object will be seperated by a ; and the name and the path will be seperated by a path.
+    //Split these by the values and then create objects with any huds that have already been made.
+}
 
+
+//Add and remove buttons.
+
+
+void MainWindow::on_addButton_clicked()
+{
+    plus();
+}
+
+
+void MainWindow::on_removeButton_clicked()
+{
+    removeButton();
 }
 

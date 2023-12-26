@@ -158,8 +158,13 @@ private slots:
 
     void on_buttonHUD6_clicked();
 
+    void on_addButton_clicked();
+
+    void on_removeButton_clicked();
+
 private:
     Ui::MainWindow *ui;
+    bool REMOVE = false;
 
 
 };
