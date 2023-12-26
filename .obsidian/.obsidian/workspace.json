@@ -1,14 +1,14 @@
 {
   "main": {
-    "id": "0db97f9593000292",
+    "id": "1f90105ce46a4e70",
     "type": "split",
     "children": [
       {
-        "id": "6df8bf896387e2cd",
+        "id": "1519fd4be11305e0",
         "type": "tabs",
         "children": [
           {
-            "id": "61685a15b9cc11b3",
+            "id": "b38d826d1afd43b3",
             "type": "leaf",
             "state": {
               "type": "empty",
@@ -16,12 +16,12 @@
             }
           },
           {
-            "id": "4b6d484930a9aaa8",
+            "id": "dc2c6ca555370029",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "To do.md",
+                "file": "Untitled.md",
                 "mode": "source",
                 "source": false
               }
@@ -34,15 +34,15 @@
     "direction": "vertical"
   },
   "left": {
-    "id": "d93ec4ae07deceb4",
+    "id": "4fd1fc311e9d1123",
     "type": "split",
     "children": [
       {
-        "id": "70f0f853c40aae5d",
+        "id": "e54dd7611b10cd95",
         "type": "tabs",
         "children": [
           {
-            "id": "f6a870572f27ac0b",
+            "id": "87b65cb1f871ddfa",
             "type": "leaf",
             "state": {
               "type": "file-explorer",
@@ -52,7 +52,7 @@
             }
           },
           {
-            "id": "9cd64814783c3a7b",
+            "id": "8c003198b8139ffe",
             "type": "leaf",
             "state": {
               "type": "search",
@@ -67,7 +67,7 @@
             }
           },
           {
-            "id": "59a606079347b800",
+            "id": "5267ff897cc2ff49",
             "type": "leaf",
             "state": {
               "type": "bookmarks",
@@ -78,24 +78,23 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300,
-    "collapsed": true
+    "width": 300
   },
   "right": {
-    "id": "d3c87aa17d5641a3",
+    "id": "23a3ac9700d20406",
     "type": "split",
     "children": [
       {
-        "id": "7b63f4b8abe9eac6",
+        "id": "041263761fdfe8ae",
         "type": "tabs",
         "children": [
           {
-            "id": "e298809195d8f07f",
+            "id": "92603277edc96e9e",
             "type": "leaf",
             "state": {
               "type": "backlink",
               "state": {
-                "file": "To do.md",
+                "file": "Untitled.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -107,19 +106,19 @@
             }
           },
           {
-            "id": "d2666222dd61fc8c",
+            "id": "43080ed389e8b932",
             "type": "leaf",
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "To do.md",
+                "file": "Untitled.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
             }
           },
           {
-            "id": "93bb45ee14ddf985",
+            "id": "f840b3b38b682eee",
             "type": "leaf",
             "state": {
               "type": "tag",
@@ -130,12 +129,12 @@
             }
           },
           {
-            "id": "107f31c9ddf9d36e",
+            "id": "103a65d71433f825",
             "type": "leaf",
             "state": {
               "type": "outline",
               "state": {
-                "file": "To do.md"
+                "file": "Untitled.md"
               }
             }
           }
@@ -156,21 +155,8 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "f6a870572f27ac0b",
+  "active": "dc2c6ca555370029",
   "lastOpenFiles": [
-    "customhud.h.Exdzdi",
-    "customhud.h.tBRjur",
-    "customhud.h.QPVFxR",
-    "customhud.h.EaVAxP",
-    "customhud.h.RWvJWF",
-    "customhud.h.yqZVEM",
-    "customhud.h.dzbZtK",
-    "customhud.h.SmCnHD",
-    "customhud.h.PdAbKX",
-    "customhud.h.ccclUM",
-    "customhud.h.JpfkmE",
-    "logo.png",
-    "README.md",
-    "To do.md"
+    "Untitled.md"
   ]
 }
