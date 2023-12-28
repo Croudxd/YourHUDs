@@ -188,6 +188,7 @@ QString MainWindow::installHud()
     // Clean up the network reply
     reply->deleteLater();
     }
+    return QString();
 }
 
 
@@ -551,6 +552,7 @@ bool MainWindow::addButton()
     currentCustomHud.setName(hudName);
     customHUDs.push_back(currentCustomHud);
     //dynamically add a button, from the vector 1-6;
+    return true;
 }
 
 bool MainWindow::removeButton()
@@ -580,7 +582,7 @@ bool MainWindow::copyHud(QString HUDFilePath, QString DownloadFilePath)
 bool MainWindow::toFile()
 {
     QString content;
-    for(customhud hud : customHUDs)
+    for(customhud &hud : customHUDs)
     {
         content + hud.getName();
         content + " ";
