@@ -118,7 +118,7 @@ public:
      * @brief copyHud
      * @return
      */
-    bool copyHud(QString HUDFilePath, QString DownloadFilePath);
+    bool copyHud(QString src, QString dst);
 
     /**
      * Returns all of customhud to a string to be put into file.

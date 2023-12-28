@@ -615,14 +615,14 @@ bool MainWindow::loadButtonsFromData()
 {
     //funciton to load data from the customHUDs vector and turn them into buttons.
     QString content = readHudFile();
-    if(content.isNull()){
+    if(content.isNull())
+    {
         return false;
     }
     else
     {
         //create buttons with objects within CustomHUDs vector.
     }
-
 }
 
 bool MainWindow::removeButton()
@@ -633,25 +633,48 @@ bool MainWindow::removeButton()
     return true;
 }
 
-bool MainWindow::copyHud(QString HUDFilePath, QString DownloadFilePath)
+bool MainWindow::copyHud(QString src, QString dst)
 {
-    try {
-        std::filesystem::path fromPath = HUDFilePath.toStdString();
-        std::filesystem::path toPath = DownloadFilePath.toStdString();
-
-        std::filesystem::copy(fromPath, toPath, std::filesystem::copy_options::recursive);
-
-        return true;
-    } catch (const std::filesystem::filesystem_error& e) {
-        qDebug() << "Failed trying to copy files: " << e.what();
-        return false;
-    } catch (const std::exception& e) {
-        qDebug() << "Failed due to exception: " << e.what();
-        return false;
-    } catch (...) {
-        qDebug() << "Failed due to an unknown exception.";
+    qDebug() << "copyHud executes.";
+    qDebug() << "Copying from: " << src << " to: " << dst;
+    QDir dir(src);
+    if (!dir.exists())
+    {
+        qDebug() << "Source directory does not exist: " << src;
         return false;
     }
+
+    // Create destination directory if it doesn't exist
+    if (!QDir(dst).exists() && !QDir().mkpath(dst))
+    {
+        qDebug() << "Failed to create destination directory: " << dst;
+        return false;
+    }
+
+    foreach (const QString& d, dir.entryList(QDir::Dirs | QDir::NoDotAndDotDot))
+    {
+        QString src_path = src + QDir::separator() + d;
+        QString dst_path = dst + QDir::separator() + d;
+
+        // Recursive call to copy subdirectories
+        if (!copyHud(src_path, dst_path))
+        {
+            qDebug() << "Failed to copy subdirectory: " << src_path;
+            return false;
+        }
+    }
+
+    foreach (const QString& f, dir.entryList(QDir::Files))
+    {
+        // Copy files
+        if (!QFile::copy(src + QDir::separator() + f, dst + QDir::separator() + f))
+        {
+            qDebug() << "Failed to copy file: " << src + QDir::separator() + f;
+            return false;
+        }
+    }
+
+    return true;
 }
 
 bool MainWindow::toFile()
