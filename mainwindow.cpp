@@ -542,6 +542,7 @@ void MainWindow::on_buttonHUD6_clicked()
 void MainWindow::plus()
 {
     //calls all functions belowg that need to be used within the add button.
+    addButton();
 }
 
 bool MainWindow::addButton()
@@ -551,8 +552,55 @@ bool MainWindow::addButton()
     QString hudName = QInputDialog::getText(this,"Enter HUD name","Enter name of HUD/Button.");
     currentCustomHud.setName(hudName);
     customHUDs.push_back(currentCustomHud);
-    //dynamically add a button, from the vector 1-6;
+    // Find the widget containing the grid layout
+    QWidget* gridLayoutWidget = ui->widget;
+
+    // Find the layout inside the widget
+    QGridLayout* layout = gridLayoutWidget->findChild<QGridLayout*>("gridLayout");
+
+    // Check if the layout is valid
+    if (!layout) {
+        qDebug() << "Error: Unable to find gridLayout.";
+        return false;
+    }
+
+    // Create a new button
+    QPushButton* button = new QPushButton(hudName, gridLayoutWidget);
+
+    connect(button, &QPushButton::clicked, [=]() {
+        int buttonIndex = layout->indexOf(button);
+
+        // Retrieve the corresponding CustomHud object
+        if (buttonIndex >= 0 && buttonIndex < customHUDs.size()) {
+            const customhud& clickedHud = customHUDs.at(buttonIndex);
+            QString pathtxt = readPathTxt();
+            if(!pathtxt.isEmpty()){
+                // Perform the desired function with the clickedHud
+                qDebug() << "Button clicked: " << clickedHud.getName();
+                QString hudFilePath = clickedHud.getPath();
+                QString downloadFilePath = pathtxt;
+                copyHud(hudFilePath, downloadFilePath);
+            }
+            else
+            {
+                qDebug() << "Button clicked: " << clickedHud.getName();
+                QString hudFilePath = clickedHud.getPath();
+                QString downloadFilePath = QFileDialog::getExistingDirectory(this, "Select Custom Folder", QDir::homePath());
+                copyHud(hudFilePath, downloadFilePath);
+                writePathTxt(downloadFilePath);
+            }
+        }
+    });
+
+    // Add the button to the layout
+    layout->addWidget(button);
+
+    // Ensure that the layout updates
+    gridLayoutWidget->adjustSize();
+
     return true;
+
+    //dynamically add a button, from the vector 1-6;
 }
 
 bool MainWindow::removeButton()
@@ -565,16 +613,21 @@ bool MainWindow::removeButton()
 
 bool MainWindow::copyHud(QString HUDFilePath, QString DownloadFilePath)
 {
-    try{
-        std::string hudFilePath = HUDFilePath.toStdString();
-        std::string toFilePath = DownloadFilePath.toStdString();
-        std::filesystem::path toPath(hudFilePath);
-        std::filesystem::path fromPath(toFilePath);
-        std::filesystem::copy(toPath, fromPath, std::filesystem::copy_options::recursive);
+    try {
+        std::filesystem::path fromPath = HUDFilePath.toStdString();
+        std::filesystem::path toPath = DownloadFilePath.toStdString();
+
+        std::filesystem::copy(fromPath, toPath, std::filesystem::copy_options::recursive);
+
         return true;
-    }
-    catch (int &e){
-        qDebug() << "Failed trying to copy files";
+    } catch (const std::filesystem::filesystem_error& e) {
+        qDebug() << "Failed trying to copy files: " << e.what();
+        return false;
+    } catch (const std::exception& e) {
+        qDebug() << "Failed due to exception: " << e.what();
+        return false;
+    } catch (...) {
+        qDebug() << "Failed due to an unknown exception.";
         return false;
     }
 }
