@@ -614,6 +614,14 @@ bool MainWindow::addButton()
 bool MainWindow::loadButtonsFromData()
 {
     //funciton to load data from the customHUDs vector and turn them into buttons.
+    QString content = readHudFile();
+    if(content.isNull()){
+        return false;
+    }
+    else
+    {
+        //create buttons with objects within CustomHUDs vector.
+    }
 
 }
 
