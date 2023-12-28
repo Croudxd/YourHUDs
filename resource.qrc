@@ -21,4 +21,8 @@
     <qresource prefix="/logo">
         <file>logo.png</file>
     </qresource>
+    <qresource prefix="/icons">
+        <file>imgs/icons/customize-icon.png</file>
+        <file>imgs/icons/293267_search_find_icon.png</file>
+    </qresource>
 </RCC>

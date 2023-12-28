@@ -14,6 +14,7 @@
 #include <QTimer>
 #include <QProcess>
 #include <QPointer>
+#include "customwindow.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -29,6 +30,8 @@ MainWindow::MainWindow(QWidget *parent)
     QMenuBar *q = this->menuBar();
     q->setStyleSheet("color: grey");
     setWindowIcon(QIcon(":/logo/logo.png"));
+    customWindow = new customwindow(this);
+    connect(ui->pushButton, &QPushButton::clicked, this, &MainWindow::on_pushButton_clicked);
 }
 
 
@@ -756,5 +759,14 @@ void MainWindow::on_addButton_clicked()
 void MainWindow::on_removeButton_clicked()
 {
     removeButton();
+}
+
+
+void MainWindow::on_pushButton_clicked()
+{
+    this->hide();
+
+
+    customWindow->show();
 }
 
