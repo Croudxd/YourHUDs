@@ -551,7 +551,6 @@ bool MainWindow::addButton()
     currentCustomHud.setName(hudName);
     customHUDs.push_back(currentCustomHud);
     //dynamically add a button, from the vector 1-6;
-
 }
 
 bool MainWindow::removeButton()
@@ -559,20 +558,50 @@ bool MainWindow::removeButton()
     REMOVE=true;
     //Set's remove to true
     //another click will set it too false.
+    return true;
 }
 
-bool MainWindow::copyHud()
+bool MainWindow::copyHud(QString HUDFilePath, QString DownloadFilePath)
 {
-    //get the path of hud,
-    //get path of custom folder.
-    //copy hud files to custom folder.
+    try{
+        std::string hudFilePath = HUDFilePath.toStdString();
+        std::string toFilePath = DownloadFilePath.toStdString();
+        std::filesystem::path toPath(hudFilePath);
+        std::filesystem::path fromPath(toFilePath);
+        std::filesystem::copy(toPath, fromPath, std::filesystem::copy_options::recursive);
+        return true;
+    }
+    catch (int &e){
+        qDebug() << "Failed trying to copy files";
+        return false;
+    }
 }
 
 bool MainWindow::toFile()
 {
+    QString content;
     for(customhud hud : customHUDs)
     {
-        //Build a string to print. Then save to file.
+        content + hud.getName();
+        content + " ";
+        content + hud.getPath();
+        content + "; ";
+    }
+
+    //save content to custom.txt file
+    QString filePath = "custom.txt";
+    QFile pathFile(filePath);
+    if (pathFile.open(QIODevice::WriteOnly | QIODevice::Text))
+    {
+        QTextStream out(&pathFile);
+        out << content;
+        pathFile.close();
+        return true;
+    }
+    else
+    {
+        qDebug() << "Write Path Error: Could not update TF2 path in file.";
+        return false;
     }
 }
 
@@ -580,6 +609,22 @@ QString MainWindow::readHudFile()
 {
     //read a txt file, each object will be seperated by a ; and the name and the path will be seperated by a path.
     //Split these by the values and then create objects with any huds that have already been made.
+    QString filePath = "custom.txt";
+    QFile hudFile(filePath);
+    if (hudFile.open(QIODevice::ReadOnly | QIODevice::Text))
+    {
+        QTextStream in(&hudFile);
+        QString content = in.readAll();
+        hudFile.close();
+        //Manipulate all data splitting it into new arrays by ; and each index of array split by " ";
+        //create new customhud objects, add them to customHUDs and then add buttons to each.
+        return content;
+    }
+    else
+    {
+        qDebug() << "Read Path Error: Could not open path.txt for reading.";
+        return QString();
+    }
 }
 
 
