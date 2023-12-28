@@ -602,8 +602,13 @@ background-color: rgb(179, 179, 179);</string>
       <height>24</height>
      </rect>
     </property>
+    <property name="styleSheet">
+     <string notr="true">color: rgb(0, 0, 0);
+background-color: rgb(179, 179, 179);
+</string>
+    </property>
     <property name="text">
-     <string>add</string>
+     <string>Add</string>
     </property>
    </widget>
    <widget class="QPushButton" name="removeButton">
@@ -615,8 +620,13 @@ background-color: rgb(179, 179, 179);</string>
       <height>24</height>
      </rect>
     </property>
+    <property name="styleSheet">
+     <string notr="true">color: rgb(0, 0, 0);
+background-color: rgb(179, 179, 179);
+</string>
+    </property>
     <property name="text">
-     <string>remove</string>
+     <string>Remove</string>
     </property>
    </widget>
   </widget>

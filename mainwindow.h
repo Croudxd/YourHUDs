@@ -134,6 +134,8 @@ public:
      */
     QString readHudFile();
 
+    bool loadButtonsFromData();
+
 private slots:
 
     void on_button7Hud_clicked();

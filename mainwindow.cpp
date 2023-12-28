@@ -21,6 +21,7 @@ MainWindow::MainWindow(QWidget *parent)
     , currentHud(nullptr)
     , currentCustomHud()
     , customHUDs()
+
 {
     ui->setupUi(this);
     this->setFixedWidth(800);
@@ -566,6 +567,13 @@ bool MainWindow::addButton()
 
     // Create a new button
     QPushButton* button = new QPushButton(hudName, gridLayoutWidget);
+    button->setStyleSheet("color: rgb(0, 0, 0); background-color: rgb(179, 179, 179);");
+
+    int row = layout->count() / 3; // Assuming 3 columns
+    int col = layout->count() % 3;
+
+    // Add the button to the layout at the specified row and column
+    layout->addWidget(button, row, col);
 
     connect(button, &QPushButton::clicked, [=]() {
         int buttonIndex = layout->indexOf(button);
@@ -601,6 +609,12 @@ bool MainWindow::addButton()
     return true;
 
     //dynamically add a button, from the vector 1-6;
+}
+
+bool MainWindow::loadButtonsFromData()
+{
+    //funciton to load data from the customHUDs vector and turn them into buttons.
+
 }
 
 bool MainWindow::removeButton()
@@ -672,6 +686,22 @@ QString MainWindow::readHudFile()
         QString content = in.readAll();
         hudFile.close();
         //Manipulate all data splitting it into new arrays by ; and each index of array split by " ";
+        QStringList hudList = content.split(";");
+        for(const QString& hud : hudList)
+        {
+            QStringList hudInfo = hud.trimmed().split(" ");
+
+            if(hudInfo.size() == 2){
+                QString hudName = hudInfo[0];
+                QString hudPath = hudInfo[1];
+
+                customhud newhud;
+
+                newhud.setName(hudName);
+                newhud.setPath(hudPath);
+                customHUDs.push_back(newhud);
+            }
+        }
         //create new customhud objects, add them to customHUDs and then add buttons to each.
         return content;
     }
