@@ -8,14 +8,6 @@
         "type": "tabs",
         "children": [
           {
-            "id": "61685a15b9cc11b3",
-            "type": "leaf",
-            "state": {
-              "type": "empty",
-              "state": {}
-            }
-          },
-          {
             "id": "4b6d484930a9aaa8",
             "type": "leaf",
             "state": {
@@ -27,8 +19,7 @@
               }
             }
           }
-        ],
-        "currentTab": 1
+        ]
       }
     ],
     "direction": "vertical"
@@ -158,19 +149,19 @@
   },
   "active": "4b6d484930a9aaa8",
   "lastOpenFiles": [
+    "Songs.md",
+    "CMakeLists.txt.user.CsKBiK",
+    "CMakeLists.txt.user.oUYlDC",
+    "To do.md",
+    "CMakeLists.txt.user.TORLzw",
+    "CMakeLists.txt.user.OuZWwp",
+    "customhud.h",
+    "customhud.cpp",
     "CMakeLists.txt.user.FoNnmC",
     "mainwindow.cpp.KPCAHT",
     "mainwindow.ui.yIaxnv",
     "CMakeLists.txt.user.BmMvUV",
-    "mainwindow.cpp.dtxJGq",
-    "mainwindow.cpp.ZCJDoH",
-    "mainwindow.cpp.DVJzwL",
-    "mainwindow.cpp.BkJXYo",
-    "mainwindow.cpp.UmyOGp",
-    "mainwindow.cpp.YyKwIV",
-    "mainwindow.cpp.SOwqvE",
     "logo.png",
-    "README.md",
-    "To do.md"
+    "README.md"
   ]
 }

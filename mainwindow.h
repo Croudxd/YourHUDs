@@ -4,6 +4,8 @@
 #include <QMainWindow>
 #include "hud.h"
 #include <QLabel>
+#include "customhud.h"
+#include <vector>
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -19,6 +21,9 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
     hud *currentHud;
+    customhud currentCustomHud;
+    std::vector<customhud> customHUDs;
+    int count = 0;
     QString currentPath;
     QString getCurrentPath() const;
     /**

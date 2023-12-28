@@ -19,6 +19,8 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
     , currentHud(nullptr)
+    , currentCustomHud()
+    , customHUDs()
 {
     ui->setupUi(this);
     this->setFixedWidth(800);
@@ -543,12 +545,13 @@ void MainWindow::plus()
 
 bool MainWindow::addButton()
 {
-    //create button in grid layout,
-    //create new customhud object.
-    //get dialog of path to custom hud.
-    //set using set path.
-    //get the name by use of dialog/messagbox.
-    //set the name of customhud object.
+    QString downloadDir = QFileDialog::getExistingDirectory(this, "Select HUD Directory (Make sure that you select inside the HUD directory).", QDir::homePath());
+    currentCustomHud.setPath(downloadDir);
+    QString hudName = QInputDialog::getText(this,"Enter HUD name","Enter name of HUD/Button.");
+    currentCustomHud.setName(hudName);
+    customHUDs.push_back(currentCustomHud);
+    //dynamically add a button, from the vector 1-6;
+
 }
 
 bool MainWindow::removeButton()
@@ -567,7 +570,10 @@ bool MainWindow::copyHud()
 
 bool MainWindow::toFile()
 {
-    //get name and path, save this to a file.
+    for(customhud hud : customHUDs)
+    {
+        //Build a string to print. Then save to file.
+    }
 }
 
 QString MainWindow::readHudFile()
