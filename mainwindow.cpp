@@ -584,30 +584,24 @@ bool MainWindow::addButton()
     layout->addWidget(button, 0, 0);
     currentPageWidget->updateGeometry();
     currentPageWidget->adjustSize();
-
-
     connect(button, &QPushButton::clicked, [=]() {
-        if(REMOVE)
-        {
-                int buttonIndex = layout->indexOf(button);
-                if (buttonIndex >= 0 && buttonIndex < customHUDs.size()) {
+        if (REMOVE) {
+            int buttonIndex = layout->indexOf(button);
+            if (buttonIndex >= 0 && buttonIndex < customHUDs.size()) {
                 const customhud& clickedHud = customHUDs.at(buttonIndex);
                 removeButton(button, clickedHud, buttonIndex);
-        }
-        else
-        {
+            }
+        } else {
             int buttonIndex = layout->indexOf(button);
             if (buttonIndex >= 0 && buttonIndex < customHUDs.size()) {
                 const customhud& clickedHud = customHUDs.at(buttonIndex);
                 QString pathtxt = readPathTxt();
-                if(!pathtxt.isEmpty()){
+                if (!pathtxt.isEmpty()) {
                     qDebug() << "Button clicked: " << clickedHud.getName();
                     QString hudFilePath = clickedHud.getPath();
                     QString downloadFilePath = pathtxt;
                     copyHud(hudFilePath, downloadFilePath);
-                }
-                else
-                {
+                } else {
                     qDebug() << "Button clicked: " << clickedHud.getName();
                     QString hudFilePath = clickedHud.getPath();
                     QString downloadFilePath = QFileDialog::getExistingDirectory(this, "Select Custom Folder", QDir::homePath());
@@ -615,7 +609,6 @@ bool MainWindow::addButton()
                     writePathTxt(downloadFilePath);
                 }
             }
-        }
         }
     });
 
@@ -665,46 +658,30 @@ bool MainWindow::removeButton(QPushButton* button, const customhud& hud, int ind
 
 bool MainWindow::copyHud(QString src, QString dst)
 {
-    qDebug() << "copyHud executes.";
-    qDebug() << "Copying from: " << src << " to: " << dst;
-    QDir dir(src);
-    if (!dir.exists())
-    {
-        qDebug() << "Source directory does not exist: " << src;
-        return false;
-    }
+    QString srcpath = src;
+    QString dstpath = dst;
+    QStringList param;
+    param << "copyfiles.py" << srcpath << dstpath;
 
-    // Create destination directory if it doesn't exist
-    if (!QDir(dst).exists() && !QDir().mkpath(dst))
-    {
-        qDebug() << "Failed to create destination directory: " << dst;
-        return false;
-    }
+    QPointer<QProcess> q = new QProcess;
+    q->setProgram("python");
+    q->setArguments(param);
+    q->setProcessChannelMode(QProcess::MergedChannels);
+    q->start();
+    if(q->waitForFinished(-1)){
+        qDebug() << "Process finished success";
+        qDebug() << "Output: " << q->readAllStandardOutput();
 
-    foreach (const QString& d, dir.entryList(QDir::Dirs | QDir::NoDotAndDotDot))
-    {
-        QString src_path = src + QDir::separator() + d;
-        QString dst_path = dst + QDir::separator() + d;
-
-        // Recursive call to copy subdirectories
-        if (!copyHud(src_path, dst_path))
-        {
-            qDebug() << "Failed to copy subdirectory: " << src_path;
-            return false;
+        if (q->exitCode() == 0) {
+            qDebug() << "Process finished successfully.";
+            return true;
+        } else {
+            qDebug() << "Process failed. Check the standard error output for details.";
         }
+    } else {
+        qDebug() << "Error occurred waiting for process to finish: " << q->errorString();
     }
-
-    foreach (const QString& f, dir.entryList(QDir::Files))
-    {
-        // Copy files
-        if (!QFile::copy(src + QDir::separator() + f, dst + QDir::separator() + f))
-        {
-            qDebug() << "Failed to copy file: " << src + QDir::separator() + f;
-            return false;
-        }
-    }
-
-    return true;
+    return false;
 }
 
 bool MainWindow::toFile()
