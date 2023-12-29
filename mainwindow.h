@@ -9,6 +9,7 @@
 #include "customwindow.h"
 #include <QStackedWidget>
 #include <QPushButton>
+#include <QGridLayout>
 QT_BEGIN_NAMESPACE
 namespace Ui {
 class MainWindow;
@@ -135,7 +136,6 @@ public:
      * @return
      */
     QString readHudFile();
-
     bool loadButtonsFromData();
 
 private slots:
