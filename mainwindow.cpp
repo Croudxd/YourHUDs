@@ -30,8 +30,9 @@ MainWindow::MainWindow(QWidget *parent)
     QMenuBar *q = this->menuBar();
     q->setStyleSheet("color: grey");
     setWindowIcon(QIcon(":/logo/logo.png"));
-    customWindow = new customwindow(this);
-    connect(ui->pushButton, &QPushButton::clicked, this, &MainWindow::on_pushButton_clicked);
+    connect(ui->pushButton, SIGNAL(clicked()), this, SLOT(on_pushButton_clicked()));
+    connect(ui->pushButton, SIGNAL(clicked()), this, SLOT(on_pushButton_2_clicked));
+
 }
 
 
@@ -557,10 +558,10 @@ bool MainWindow::addButton()
     currentCustomHud.setName(hudName);
     customHUDs.push_back(currentCustomHud);
     // Find the widget containing the grid layout
-    QWidget* gridLayoutWidget = ui->widget;
+    QWidget* currentPageWidget = ui->stackedWidget->currentWidget();
 
     // Find the layout inside the widget
-    QGridLayout* layout = gridLayoutWidget->findChild<QGridLayout*>("gridLayout");
+    QGridLayout* layout = currentPageWidget->findChild<QGridLayout*>("gridLayout");
 
     // Check if the layout is valid
     if (!layout) {
@@ -569,49 +570,56 @@ bool MainWindow::addButton()
     }
 
     // Create a new button
-    QPushButton* button = new QPushButton(hudName, gridLayoutWidget);
+    QPushButton* button = new QPushButton(hudName, currentPageWidget);
     button->setStyleSheet("color: rgb(0, 0, 0); background-color: rgb(179, 179, 179);");
 
-    int row = layout->count() / 3; // Assuming 3 columns
-    int col = layout->count() % 3;
+    button->setFixedHeight(50);
 
-    // Add the button to the layout at the specified row and column
-    layout->addWidget(button, row, col);
+    for (int row = layout->rowCount(); row > 0; --row) {
+        QLayoutItem* item = layout->itemAtPosition(row - 1, 0);
+        layout->addWidget(item->widget(), row, 0);
+    }
+
+    // Insert the button at the top of the layout
+    layout->addWidget(button, 0, 0);
+    currentPageWidget->updateGeometry();
+    currentPageWidget->adjustSize();
+
 
     connect(button, &QPushButton::clicked, [=]() {
-        int buttonIndex = layout->indexOf(button);
-
-        // Retrieve the corresponding CustomHud object
-        if (buttonIndex >= 0 && buttonIndex < customHUDs.size()) {
-            const customhud& clickedHud = customHUDs.at(buttonIndex);
-            QString pathtxt = readPathTxt();
-            if(!pathtxt.isEmpty()){
-                // Perform the desired function with the clickedHud
-                qDebug() << "Button clicked: " << clickedHud.getName();
-                QString hudFilePath = clickedHud.getPath();
-                QString downloadFilePath = pathtxt;
-                copyHud(hudFilePath, downloadFilePath);
+        if(REMOVE)
+        {
+                int buttonIndex = layout->indexOf(button);
+                if (buttonIndex >= 0 && buttonIndex < customHUDs.size()) {
+                const customhud& clickedHud = customHUDs.at(buttonIndex);
+                removeButton(button, clickedHud, buttonIndex);
+        }
+        else
+        {
+            int buttonIndex = layout->indexOf(button);
+            if (buttonIndex >= 0 && buttonIndex < customHUDs.size()) {
+                const customhud& clickedHud = customHUDs.at(buttonIndex);
+                QString pathtxt = readPathTxt();
+                if(!pathtxt.isEmpty()){
+                    qDebug() << "Button clicked: " << clickedHud.getName();
+                    QString hudFilePath = clickedHud.getPath();
+                    QString downloadFilePath = pathtxt;
+                    copyHud(hudFilePath, downloadFilePath);
+                }
+                else
+                {
+                    qDebug() << "Button clicked: " << clickedHud.getName();
+                    QString hudFilePath = clickedHud.getPath();
+                    QString downloadFilePath = QFileDialog::getExistingDirectory(this, "Select Custom Folder", QDir::homePath());
+                    copyHud(hudFilePath, downloadFilePath);
+                    writePathTxt(downloadFilePath);
+                }
             }
-            else
-            {
-                qDebug() << "Button clicked: " << clickedHud.getName();
-                QString hudFilePath = clickedHud.getPath();
-                QString downloadFilePath = QFileDialog::getExistingDirectory(this, "Select Custom Folder", QDir::homePath());
-                copyHud(hudFilePath, downloadFilePath);
-                writePathTxt(downloadFilePath);
-            }
+        }
         }
     });
 
-    // Add the button to the layout
-    layout->addWidget(button);
-
-    // Ensure that the layout updates
-    gridLayoutWidget->adjustSize();
-
     return true;
-
-    //dynamically add a button, from the vector 1-6;
 }
 
 bool MainWindow::loadButtonsFromData()
@@ -625,14 +633,33 @@ bool MainWindow::loadButtonsFromData()
     else
     {
         //create buttons with objects within CustomHUDs vector.
+        return true;
     }
 }
 
-bool MainWindow::removeButton()
+bool MainWindow::removeButton(QPushButton* button, const customhud& hud, int index)
 {
-    REMOVE=true;
-    //Set's remove to true
-    //another click will set it too false.
+    QGridLayout* layout = ui->widget->findChild<QGridLayout*>("gridLayout");
+
+    if (!layout) {
+        qDebug() << "Error: Unable to find gridLayout.";
+        return false;
+    }
+
+    int buttonIndex = layout->indexOf(button);
+
+    layout->removeWidget(button);
+    button->deleteLater();
+
+    if (buttonIndex >= 0 && buttonIndex < customHUDs.size()) {
+        customHUDs.erase(customHUDs.begin() + buttonIndex);
+    }
+
+    ui->widget->updateGeometry();
+    ui->widget->adjustSize();
+
+    toFile();
+
     return true;
 }
 
@@ -685,10 +712,10 @@ bool MainWindow::toFile()
     QString content;
     for(customhud &hud : customHUDs)
     {
-        content + hud.getName();
-        content + " ";
-        content + hud.getPath();
-        content + "; ";
+        content += hud.getName();
+        content += " ";
+        content += hud.getPath();
+        content += "; ";
     }
 
     //save content to custom.txt file
@@ -734,6 +761,7 @@ QString MainWindow::readHudFile()
                 newhud.setName(hudName);
                 newhud.setPath(hudPath);
                 customHUDs.push_back(newhud);
+                loadButtonsFromData();
             }
         }
         //create new customhud objects, add them to customHUDs and then add buttons to each.
@@ -758,15 +786,25 @@ void MainWindow::on_addButton_clicked()
 
 void MainWindow::on_removeButton_clicked()
 {
-    removeButton();
+    REMOVE=true;
 }
 
 
 void MainWindow::on_pushButton_clicked()
 {
-    this->hide();
+    ui->stackedWidget->setCurrentWidget(ui->page_4);
+
+}
 
 
-    customWindow->show();
+void MainWindow::on_pushButton_2_clicked()
+{
+    ui->stackedWidget->setCurrentWidget(ui->page_3);
+
+
+}
+void MainWindow::on_SaveButton_clicked()
+{
+    toFile();
 }
 

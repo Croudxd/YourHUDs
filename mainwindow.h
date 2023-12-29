@@ -7,6 +7,8 @@
 #include "customhud.h"
 #include <vector>
 #include "customwindow.h"
+#include <QStackedWidget>
+#include <QPushButton>
 QT_BEGIN_NAMESPACE
 namespace Ui {
 class MainWindow;
@@ -111,7 +113,7 @@ public:
      * @brief removeButton
      * @return
      */
-    bool removeButton();
+    bool removeButton(QPushButton* button, const customhud& hud, int index);
 
     /**
      * Will take two paths, and copy hud from one path to the second path/param.
@@ -171,11 +173,15 @@ private slots:
 
     void on_pushButton_clicked();
 
+    void on_pushButton_2_clicked();
+
+    void on_SaveButton_clicked();
+
 private:
     Ui::MainWindow *ui;
     bool REMOVE = false;
     customwindow *customWindow;
-
+    QStackedWidget *stackedWidget;
 
 };
 #endif // MAINWINDOW_H
