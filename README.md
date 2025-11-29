@@ -32,4 +32,6 @@ Please make sure to report any issues to me either here or my discord @croudxd.
 ![image](https://github.com/Croudxd/YourHUDs/assets/98527451/239eaf2a-046b-4848-87ca-4dc5f19a9678)
 ![ezgif com-video-to-gif-converted](https://github.com/Croudxd/YourHUDs/assets/98527451/daa3931a-2898-43c7-8d0e-41bbb8790dda)
 
+### This project has been archieved and is no longer updated.
+This was a fun project which helped teach me QT in c++, it was also a good starter with getting me programming with files. And also gave me a good idea of a more dynamic code base and how to use that in the frontend which has definetly trasnfered to some of my other projects over the years.
 
