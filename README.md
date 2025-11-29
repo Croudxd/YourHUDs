@@ -29,6 +29,7 @@ For anyone wanting to customize the source code and add own HUD's/buttons. Its a
 Please make sure to report any issues to me either here or my discord @croudxd.
 
 **Images of program:**
+<img src="[path/to/image.png](https://github.com/Croudxd/YourHUDs/assets/98527451/239eaf2a-046b-4848-87ca-4dc5f19a9678)" width="300" />
 ![image](https://github.com/Croudxd/YourHUDs/assets/98527451/239eaf2a-046b-4848-87ca-4dc5f19a9678)
 ![ezgif com-video-to-gif-converted](https://github.com/Croudxd/YourHUDs/assets/98527451/daa3931a-2898-43c7-8d0e-41bbb8790dda)
 
